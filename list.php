@@ -67,13 +67,13 @@ mysqli_close($conn);
                     <label for="tanggal">Select Date</label>
                     <input type="date" class="form-control" id="tanggal" name="tanggal" value="<?php echo htmlspecialchars($filter_date); ?>">
                 </div>
-                <!-- <div class="col-auto">
+                <div class="col-auto">
                     <label for="sort_order">Sort By Tanggal</label>
                     <select class="form-control" id="sort_order" name="sort_order">
                         <option value="ASC" <?php if ($sort_order == 'ASC') echo 'selected'; ?>>Ascending</option>
                         <option value="DESC" <?php if ($sort_order == 'DESC') echo 'selected'; ?>>Descending</option>
                     </select>
-                </div> -->
+                </div>
                 <div class="col-auto">
                     <button type="submit" class="btn btn-primary">Apply</button>
                 </div>

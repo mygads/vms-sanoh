@@ -11,13 +11,13 @@ $bertemu = $_POST["bertemu"];
 $in_time = $_POST["in_time"];
 $out_time = $_POST["out_time"];
 $jumlah_tamu = isset($_POST["jumlah_tamu"]) ? (int) $_POST["jumlah_tamu"] : null;
+$type = $_POST['type'];
 
-// Determine the type based on the input fields
-if (empty($keperluan) && empty($nomor_visitor) && empty($bertemu) && empty($jumlah_tamu)) {
-    $type = 'delivery';
-} else {
-    $type = 'guest';
-}
+// if (empty($keperluan) && empty($nomor_visitor) && empty($bertemu) && empty($jumlah_tamu)) {
+//     $type = 'delivery';
+// } else {
+//     $type = 'guest';
+// }
 
 // Prepare the SQL statement with parameterized queries to prevent SQL injection
 $conn = getConnectionMysqli();

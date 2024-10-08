@@ -26,12 +26,14 @@ form label {
     font-weight: bold;
 }
 
+/* Include select elements in the styling */
 form input[type="text"],
 form input[type="email"],
 form input[type="date"],
 form input[type="time"],
 form input[type="number"],
-form textarea {
+form textarea,
+form select {
     width: 100%;
     padding: 12px;
     margin-bottom: 20px;
@@ -39,6 +41,17 @@ form textarea {
     border-radius: 5px;
     background: rgba(255,255,255,0.1);
     color: #fff;
+    -webkit-appearance: none; /* Remove default styling in Safari */
+    -moz-appearance: none;    /* Remove default styling in Firefox */
+    appearance: none;         /* Remove default styling in modern browsers */
+}
+
+/* Add an arrow indicator for the select dropdown */
+form select {
+    background-image: url('data:image/svg+xml;charset=US-ASCII,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="10" viewBox="0 0 14 10"><polygon points="7,10 0,0 14,0" style="fill:%23ffffff;"/></svg>');
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 12px;
 }
 
 form textarea {
@@ -59,4 +72,10 @@ form input[type="submit"] {
 
 form input[type="submit"]:hover {
     background: #5651e5;
+}
+
+/* Style disabled options */
+form select option:disabled {
+    color: #999;
+    background: rgba(255,255,255,0.1);
 }
