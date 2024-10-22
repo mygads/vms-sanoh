@@ -39,8 +39,8 @@ form select {
     margin-bottom: 20px;
     border: none;
     border-radius: 5px;
-    background: rgba(255,255,255,0.1);
-    color: #fff;
+    background: rgba(0, 0, 0, 0.1);
+    color: #000000;
     -webkit-appearance: none; /* Remove default styling in Safari */
     -moz-appearance: none;    /* Remove default styling in Firefox */
     appearance: none;         /* Remove default styling in modern browsers */
@@ -52,6 +52,8 @@ form select {
     background-repeat: no-repeat;
     background-position: right 10px center;
     background-size: 12px;
+    background-color: #ffffff; /* Change background color to white */
+    color: #000000; /* Change font color to black */
 }
 
 form textarea {
@@ -77,5 +79,11 @@ form input[type="submit"]:hover {
 /* Style disabled options */
 form select option:disabled {
     color: #999;
-    background: rgba(255,255,255,0.1);
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* Style the dropdown options when they are displayed */
+form select option {
+    background-color: #ffffff; /* Set option background color to white */
+    color: #000000; /* Set option font color to black */
 }

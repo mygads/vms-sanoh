@@ -126,6 +126,7 @@ mysqli_close($conn);
                             <strong>Tanggal:</strong> <?php echo htmlspecialchars($row['tanggal']); ?><br>
                             <strong>No Pol:</strong> <?php echo htmlspecialchars($row['no_pol']); ?><br>
                             <strong>Dari:</strong> <?php echo htmlspecialchars($row['dari_pt']); ?><br>
+                            <strong>Nomor Parkir:</strong> <?php echo htmlspecialchars($row['nomor_visitor']); ?><br>
                             <strong>In Time:</strong> <?php echo htmlspecialchars($row['in_time']); ?><br>
                             <strong>Out Time:</strong> <?php echo htmlspecialchars($row['out_time']); ?>
                         </p>

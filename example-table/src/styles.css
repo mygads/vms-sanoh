@@ -1,0 +1,67 @@
+/* styles.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .main-page,
+  .form-page,
+  .camera-page,
+  .table-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .button {
+    background-color: #6200ee;
+    color: white;
+    padding: 10px 20px;
+    margin: 10px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .button:hover {
+    background-color: #3700b3;
+  }
+  
+  .form {
+    display: flex;
+    flex-direction: column;
+    width: 300px;
+  }
+  
+  .form label {
+    margin-bottom: 10px;
+  }
+  
+  .form input,
+  .form select {
+    padding: 5px;
+    margin-top: 5px;
+  }
+  
+  .video {
+    width: 640px;
+    height: 480px;
+    background-color: black;
+  }
+  
+  .visitor-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .visitor-table th,
+  .visitor-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+  }
+  
+  .visitor-table th {
+    background-color: #f2f2f2;
+  }
+  

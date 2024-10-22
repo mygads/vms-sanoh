@@ -19,11 +19,9 @@ $type = $_POST['type'];
 //     $type = 'guest';
 // }
 
-// Prepare the SQL statement with parameterized queries to prevent SQL injection
 $conn = getConnectionMysqli();
 $stmt = $conn->prepare("INSERT INTO meet (tanggal, nama, no_pol, dari_pt, keperluan, nomor_visitor, bertemu, in_time, out_time, jumlah_tamu, type) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
 
-// Bind the parameters
 $stmt->bind_param(
     "sssssssssis",
     $tanggal,
@@ -39,14 +37,11 @@ $stmt->bind_param(
     $type
 );
 
-// Execute the statement
 $stmt->execute();
 
-// Close the statement and connection
 $stmt->close();
 $conn->close();
 
-// Redirect to the list page
 header("Location: list.php");
 exit();
 ?>

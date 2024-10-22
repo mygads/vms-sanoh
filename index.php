@@ -38,7 +38,7 @@ $conn->close();
         <form action="process.php" method="POST">
             <label for="type">Type:</label>
             <select id="type" name="type" required>
-                <option value=""></option>
+                <option value="">Select Type</option>
                 <option value="guest">Guest</option>
                 <option value="delivery">Delivery</option>
             </select>
@@ -97,7 +97,7 @@ $conn->close();
                 // Add a default option
                 var defaultOption = document.createElement('option');
                 defaultOption.value = '';
-                defaultOption.text = '--Select Nomor Visitor--';
+                defaultOption.text = 'Select Nomor Visitor';
                 nomorVisitorSelect.appendChild(defaultOption);
 
                 var numbers = [];
