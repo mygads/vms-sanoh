@@ -60,7 +60,7 @@ const CheckInForm: React.FC = () => {
       {!showCamera ? (
         <form onSubmit={handleSubmit} className="form">
           <label>
-            Date:
+            Tanggal:
             <input
               type="date"
               name="visitor_date"
@@ -69,7 +69,7 @@ const CheckInForm: React.FC = () => {
             />
           </label>
           <label>
-            Name:
+            Nama:
             <input
               type="text"
               name="visitor_name"
@@ -78,7 +78,7 @@ const CheckInForm: React.FC = () => {
             />
           </label>
           <label>
-            From:
+            Dari:
             <input
               type="text"
               name="visitor_from"
@@ -87,7 +87,7 @@ const CheckInForm: React.FC = () => {
             />
           </label>
           <label>
-            Host:
+            Bertemu:
             <input
               type="text"
               name="visitor_host"
@@ -96,7 +96,7 @@ const CheckInForm: React.FC = () => {
             />
           </label>
           <label>
-            Needs:
+            Keperluan:
             <select
               name="visitor_needs"
               onChange={handleChange}
@@ -112,7 +112,7 @@ const CheckInForm: React.FC = () => {
             </select>
           </label>
           <label>
-            Amount:
+            Jumlah Tamu:
             <input
               type="number"
               name="visitor_amount"
@@ -122,7 +122,7 @@ const CheckInForm: React.FC = () => {
             />
           </label>
           <label>
-            Vehicle:
+            Nomor Kendaraan:
             <input
               type="text"
               name="visitor_vehicle"

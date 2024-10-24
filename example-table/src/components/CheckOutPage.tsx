@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { fetchVisitorData, Visitor } from '../services/apiService';
+import { fetchVisitorData, checkOutVisitor, Visitor } from '../services/apiService';
 import '../styles.css';
 
 const CheckOutPage: React.FC = () => {
@@ -13,19 +13,34 @@ const CheckOutPage: React.FC = () => {
     getData();
   }, []);
 
+  const handleCheckOut = async (visitorId: string) => {
+    try {
+      await checkOutVisitor(visitorId);
+      setVisitors((prevVisitors) =>
+        prevVisitors.map((visitor) =>
+          visitor.visitor_id === visitorId
+            ? { ...visitor, visitor_checkout: new Date().toISOString() }
+            : visitor
+        )
+      );
+    } catch (error) {
+      console.error('Failed to check out visitor:', error);
+    }
+  };
+
   return (
     <div className="table-page">
       <h2>Visitor Check-out</h2>
       <table className="visitor-table">
         <thead>
           <tr>
-            <th>Image</th> {/* Changed from "ID" to "Image" */}
-            <th>Name</th>
-            <th>From</th>
-            <th>Host</th>
-            <th>Needs</th>
-            <th>Amount</th>
-            <th>Vehicle</th>
+            <th>Foto</th>
+            <th>Nama</th>
+            <th>Dari</th>
+            <th>Bertemu</th>
+            <th>Keperluan</th>
+            <th>Jumlah Tamu</th>
+            <th>Nomor Kendaraan</th>
             <th>Check-in</th>
             <th>Check-out</th>
             <th>Action</th>
@@ -35,11 +50,10 @@ const CheckOutPage: React.FC = () => {
           {visitors.map((visitor) => (
             <tr key={visitor.visitor_id}>
               <td>
-                {/* Display the visitor's image */}
                 <img
                   src={`http://127.0.0.1:8000/storage/${visitor.visitor_img}`}
                   alt={`Visitor ${visitor.visitor_name}`}
-                  style={{ width: '100px', height: '100px' }}
+                  style={{ width: '100px', height: '100px', borderRadius: '50%' }}
                 />
               </td>
               <td>{visitor.visitor_name}</td>
@@ -49,9 +63,13 @@ const CheckOutPage: React.FC = () => {
               <td>{visitor.visitor_amount}</td>
               <td>{visitor.visitor_vehicle}</td>
               <td>{visitor.visitor_checkin}</td>
-              <td>{visitor.visitor_checkout || 'N/A'}</td>
+              <td>{visitor.visitor_checkout}</td>
               <td>
-                <button className="button">Check-out</button>
+                {(!visitor.visitor_checkout) && (
+                  <button className="button" onClick={() => handleCheckOut(visitor.visitor_id)}>
+                    Check-out
+                  </button>
+                )}
               </td>
             </tr>
           ))}

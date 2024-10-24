@@ -3,7 +3,7 @@ import axios from 'axios';
 
 // Define the Visitor interface here
 export interface Visitor {
-  visitor_id: number;
+  visitor_id: string;
   visitor_date: string;
   visitor_name: string;
   visitor_from: string;
@@ -37,12 +37,11 @@ export const submitVisitorData = async (
     }
   };
 
-// New function to handle visitor check-out
-export const checkOutVisitor = async (visitorId: number): Promise<void> => {
-  try {
-    await axios.put(`http://127.0.0.1:8000/api/visitor/${visitorId}/checkout`);
-  } catch (error) {
-    console.error('Error checking out visitor:', error);
-    throw error;
-  }
+export const checkOutVisitor = async (visitorId: string): Promise<void> => {
+    try {
+      await axios.put(`http://127.0.0.1:8000/api/checkout/${visitorId}`);
+    } catch (error) {
+      console.error('Error checking out visitor:', error);
+      throw error;
+    }
 };
