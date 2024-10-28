@@ -1,5 +1,4 @@
 import React, { useRef } from 'react';
-import '../styles.css';
 
 interface CameraCaptureProps {
   onCapture: (imageData: string) => void;
