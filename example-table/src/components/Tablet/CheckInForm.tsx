@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import CameraCapture from './CameraCapture';
-import { submitVisitorData } from '../services/apiService';
+import { submitVisitorData } from '../../services/apiService';
 
 interface VisitorData {
   visitor_date: string;
@@ -46,7 +46,7 @@ const CheckInForm: React.FC = () => {
       console.log('Data submitted successfully');
 
       // Redirect back to the main page
-      navigate('/');
+      navigate('/tablet');
     } catch (error) {
       console.error('Error submitting data:', error);
     }

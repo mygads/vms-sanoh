@@ -1,4 +1,3 @@
-// services/apiService.ts
 import axios from 'axios';
 
 // Define the Visitor interface here

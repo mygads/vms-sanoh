@@ -48,3 +48,6 @@ export default tseslint.config({
   },
 })
 ```
+## For hide something that didnt needed on print using html2pdf.js
+
+data-html2canvas-ignore
