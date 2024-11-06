@@ -44,14 +44,14 @@ const CheckOutPage: React.FC = () => {
     try {
       await checkOutVisitor(visitorId);
       await getData(); // Refresh data after successful check-out
-      navigate('/tablet'); // Redirect to main page after check-out
+      navigate('/tablet/'); // Redirect to main page after check-out
     } catch (error) {
       console.error('Failed to check out visitor:', error);
     }
   };
 
   const handlePrint = (visitorId: string) => {
-    navigate(`/print/${visitorId}`);
+    navigate(`/tablet/print/${visitorId}`);
   };
 
   const totalPages = Math.ceil(filteredVisitors.length / itemsPerPage);
