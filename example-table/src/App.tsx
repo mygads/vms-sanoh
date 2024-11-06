@@ -8,6 +8,10 @@ import CheckOutPage from './components/Tablet/CheckOutPage';
 import PrintReceipt from './components/Tablet/PrintReceipt';
 import Security from './components/Security/Security';
 import Admin from './components/Admin/Admin';
+import VisitorLog from "./components/Admin/VisitorLog";
+import Employees from "./components/Admin/Employees";
+import DefaultLayout from "./components/DefaultLayout";
+import './index.css';
 
 const App: React.FC = () => {
   return (
@@ -18,8 +22,16 @@ const App: React.FC = () => {
         <Route path="/tablet/checkin" element={<CheckInForm />} />
         <Route path="/tablet/checkout" element={<CheckOutPage />} />
         <Route path="/tablet/print/:visitorId" element={<PrintReceipt />} />
-        <Route path="/security" element={<Security />} />
-        <Route path="/admin" element={<Admin />} />
+        <Route element={<DefaultLayout />}>
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin/visitor-log" element={<VisitorLog />} />
+          <Route path="/admin/employees" element={<Employees />} />
+        </Route>
+        <Route element={<DefaultLayout />}>
+          <Route path="/security" element={<Security />} />
+          <Route path="/security/visitor-log" element={<VisitorLog />} />
+          <Route path="/security/employees" element={<Employees />} />
+        </Route>
       </Routes>
     </Router>
   );
