@@ -18,10 +18,10 @@ export interface Visitor {
 
 export interface Employee {
   name: string; // Using name as the unique identifier
-  nik: number;
+  nik: string;
   email: string;
   department: string;
-  phone_number: number;
+  phone_number: string;
   employee_code: string;
 }
 
@@ -65,7 +65,7 @@ export const allVisitor = async (): Promise<void> => {
   }
 };
 
-// Employee API functions
+// Employee
 export const fetchEmployeeData = async (): Promise<Employee[]> => {
   try {
     const response = await axios.get('http://127.0.0.1:8000/api/employee');
@@ -78,16 +78,16 @@ export const fetchEmployeeData = async (): Promise<Employee[]> => {
 
 export const submitEmployeeData = async (employee: Employee): Promise<void> => {
   try {
-    await axios.post('http://127..0.0.1:8000/api/createemployee', employee);
+    await axios.post('http://127.0.0.1:8000/api/createemployee', employee);
   } catch (error) {
     console.error('Error submitting employee data:', error);
     throw error;
   }
 };
 
-export const editEmployeeData = async (employeeName: string): Promise<Employee> => {
+export const editEmployeeData = async (name: string): Promise<Employee> => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/api/employee/${employeeName}`);
+    const response = await axios.get(`http://127.0.0.1:8000/api/edit/${name}`);
     return response.data.data;
   } catch (error) {
     console.error('Error fetching employee data for editing:', error);
@@ -96,20 +96,20 @@ export const editEmployeeData = async (employeeName: string): Promise<Employee> 
 };
 
 export const updateEmployeeData = async (
-  employeeName: string,
-  data: Pick<Employee, 'phone_number' | 'employee_code' | 'nik'>
+  name: string,
+  data: Pick<Employee, 'phone_number' | 'employee_code' | 'department' | 'email'>
 ): Promise<void> => {
   try {
-    await axios.put(`http://127.0.0.1:8000/api/update/${employeeName}`, data);
+    await axios.put(`http://127.0.0.1:8000/api/update/${name}`, data);
   } catch (error) {
     console.error('Error updating employee data:', error);
     throw error;
   }
 };
 
-export const deleteEmployeeData = async (employeeName: string): Promise<void> => {
+export const deleteEmployeeData = async (name: string): Promise<void> => {
   try {
-    await axios.delete(`http://127.0.0.1:8000/api/delete/${employeeName}`);
+    await axios.delete(`http://127.0.0.1:8000/api/delete/${name}`);
   } catch (error) {
     console.error('Error deleting employee data:', error);
     throw error;

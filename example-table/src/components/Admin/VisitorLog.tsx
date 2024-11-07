@@ -13,6 +13,7 @@ interface Visitor {
   visitor_needs: string;
   visitor_amount: number;
   visitor_vehicle: string;
+  department: string;
   visitor_checkin: string;
 }
 
@@ -268,6 +269,7 @@ const VisitorLog: React.FC = () => {
               <th className="px-4 py-2 border-b bg-gray-100 text-center text-sm text-gray-700">Nama</th>
               <th className="px-4 py-2 border-b bg-gray-100 text-center text-sm text-gray-700">Dari</th>
               <th className="px-4 py-2 border-b bg-gray-100 text-center text-sm text-gray-700">Bertemu</th>
+              <th className="px-4 py-2 border-b bg-gray-100 text-center text-sm text-gray-700">Department</th>
               <th className="px-4 py-2 border-b bg-gray-100 text-center text-sm text-gray-700">Keperluan</th>
               <th className="px-4 py-2 border-b bg-gray-100 text-center text-sm text-gray-700">Jumlah Tamu</th>
               <th className="px-4 py-2 border-b bg-gray-100 text-center text-sm text-gray-700">Nomor Kendaraan</th>
@@ -287,6 +289,7 @@ const VisitorLog: React.FC = () => {
                 <td className="px-4 py-2 border-b text-center">{visitor.visitor_name}</td>
                 <td className="px-4 py-2 border-b text-center">{visitor.visitor_from}</td>
                 <td className="px-4 py-2 border-b text-center">{visitor.visitor_host}</td>
+                <td className="px-4 py-2 border-b text-center">{visitor.department}</td>
                 <td className="px-4 py-2 border-b text-center">{visitor.visitor_needs}</td>
                 <td className="px-4 py-2 border-b text-center">{visitor.visitor_amount}</td>
                 <td className="px-4 py-2 border-b text-center">{visitor.visitor_vehicle}</td>
