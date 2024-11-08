@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { fetchVisitorData } from '../../services/apiService';
 
 interface Visitor {
-  visitor_id: number;
+  visitor_id: string;
   visitor_img: string;
   visitor_name: string;
   visitor_from: string;
@@ -11,7 +11,7 @@ interface Visitor {
   visitor_amount: number;
   visitor_vehicle: string;
   visitor_checkin: string;
-  visitor_checkout: string;
+  visitor_checkout: string | null;
 }
 
 const Admin: React.FC = () => {

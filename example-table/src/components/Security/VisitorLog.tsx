@@ -25,8 +25,8 @@ const VisitorLog: React.FC = () => {
 
   const getData = async () => {
     try {
-      const response: Visitor[] = await allVisitor();
-      if (response && response.length > 0) {
+      const response = await allVisitor();
+      if (Array.isArray(response) && response.length > 0) {
         setVisitors(response);
         setFilteredVisitors(response);
       } else {

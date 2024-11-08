@@ -1,22 +1,22 @@
 import React, { useEffect, useState } from 'react';
-import { Outlet, Link, useNavigate } from 'react-router-dom';
+import { Outlet, Link, useNavigate, useLocation } from 'react-router-dom';
 import logoSanoh from '/logo-sanoh.png'; // Adjust the path as needed
 
 const DefaultLayout: React.FC = () => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [userRole, setUserRole] = useState<string | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [sidebarOpen] = useState(false);
+  const [isLoading] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
-    const role = localStorage.getItem('role');
-    setUserRole(role);
-    setIsLoading(false);
+    localStorage.getItem('role');
   }, []);
 
   if (isLoading) {
     return <div>Loading...</div>;
   }
+
+  const isSecurity = location.pathname.startsWith('/security');
 
   return (
     <div className="flex h-screen overflow-hidden">
@@ -30,13 +30,15 @@ const DefaultLayout: React.FC = () => {
         {/* Header with clickable Sanoh logo */}
         <header className="bg-gray-300 text-white py-2 px-4 flex justify-between items-center h-16">
           <div className="flex items-center h-full">
-            <button onClick={() => navigate('/admin')}>
-            <img src={logoSanoh} alt="Sanoh Logo" className="h-10 w-auto object-contain" />
+            <button onClick={() => navigate(isSecurity ? '/security' : '/admin')}>
+              <img src={logoSanoh} alt="Sanoh Logo" className="h-10 w-auto object-contain" />
             </button>
           </div>
           <nav className="space-x-7 flex pr-10">
-            <Link to="/admin/visitor-log" className="text-gray-900 hover:underline">Visitor Log</Link>
-            <Link to="/admin/employees" className="text-gray-900 hover:underline">Employee</Link>
+            <Link to={isSecurity ? "/security/visitor-log" : "/admin/visitor-log"} className="text-gray-900 hover:underline">Visitor Log</Link>
+            {!isSecurity && (
+              <Link to="/admin/employees" className="text-gray-900 hover:underline">Employee</Link>
+            )}
           </nav>
         </header>
 
