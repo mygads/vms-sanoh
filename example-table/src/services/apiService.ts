@@ -56,11 +56,12 @@ export const checkOutVisitor = async (visitorId: string): Promise<void> => {
   }
 };
 
-export const allVisitor = async (): Promise<void> => {
+export const allVisitor = async (): Promise<Visitor[]> => {
   try {
-    await axios.put(`http://127.0.0.1:8000/api/index`);
+    const response = await axios.get('http://127.0.0.1:8000/api/index');
+    return response.data;
   } catch (error) {
-    console.error('Error checking out visitor:', error);
+    console.error('Error fetching visitor data:', error);
     throw error;
   }
 };
@@ -85,9 +86,9 @@ export const submitEmployeeData = async (employee: Employee): Promise<void> => {
   }
 };
 
-export const editEmployeeData = async (name: string): Promise<Employee> => {
+export const editEmployeeData = async (nik: string): Promise<Employee> => {
   try {
-    const response = await axios.get(`http://127.0.0.1:8000/api/edit/${name}`);
+    const response = await axios.get(`http://127.0.0.1:8000/api/edit/${nik}`);
     return response.data.data;
   } catch (error) {
     console.error('Error fetching employee data for editing:', error);
@@ -96,20 +97,20 @@ export const editEmployeeData = async (name: string): Promise<Employee> => {
 };
 
 export const updateEmployeeData = async (
-  name: string,
+  nik: string,
   data: Pick<Employee, 'phone_number' | 'employee_code' | 'department' | 'email'>
 ): Promise<void> => {
   try {
-    await axios.put(`http://127.0.0.1:8000/api/update/${name}`, data);
+    await axios.put(`http://127.0.0.1:8000/api/update/${nik}`, data);
   } catch (error) {
     console.error('Error updating employee data:', error);
     throw error;
   }
 };
 
-export const deleteEmployeeData = async (name: string): Promise<void> => {
+export const deleteEmployeeData = async (nik: string): Promise<void> => {
   try {
-    await axios.delete(`http://127.0.0.1:8000/api/delete/${name}`);
+    await axios.delete(`http://127.0.0.1:8000/api/delete/${nik}`);
   } catch (error) {
     console.error('Error deleting employee data:', error);
     throw error;

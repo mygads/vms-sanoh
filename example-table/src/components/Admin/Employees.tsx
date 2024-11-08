@@ -229,7 +229,6 @@ const EmployeeLog: React.FC = () => {
                     value={formData.email}
                     onChange={handleInputChange}
                     className="w-full px-3 py-2 border rounded"
-                    required
                   />
                 </div>
                 <div className="mb-4">
@@ -300,7 +299,7 @@ const EmployeeLog: React.FC = () => {
             </thead>
             <tbody>
               {employees.map((employee) => (
-                <tr key={employee.nik} className="odd:bg-white even:bg-gray-50 border-b">
+                <tr key={employee.name} className="odd:bg-white even:bg-gray-50 border-b">
                   <td className="px-6 py-3 text-center">{employee.name}</td>
                   <td className="px-6 py-3 text-center">{employee.email}</td>
                   <td className="px-6 py-3 text-center">{employee.department}</td>
