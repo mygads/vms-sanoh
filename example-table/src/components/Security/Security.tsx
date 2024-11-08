@@ -1,20 +1,41 @@
 import React, { useEffect, useState } from 'react';
+import { fetchVisitorData } from '../../services/apiService';
 
-const Admin: React.FC = () => {
+interface Visitor {
+  visitor_id: string;
+  visitor_img: string;
+  visitor_name: string;
+  visitor_from: string;
+  visitor_host: string;
+  visitor_needs: string;
+  visitor_amount: number;
+  visitor_vehicle: string;
+  visitor_checkin: string;
+  visitor_checkout: string | null;
+}
+
+const Security: React.FC = () => {
   const [visitorCount, setVisitorCount] = useState<number>(0);
   const [currentDate, setCurrentDate] = useState<string>('');
-  const [currentVisitors, setCurrentVisitors] = useState<any[]>([]); // Replace 'any' with a proper type if available
+  const [currentVisitors, setCurrentVisitors] = useState<Visitor[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 5;
-  
+
   useEffect(() => {
     const fetchVisitorCount = async () => {
-      const count = 42; // Placeholder count
-      setVisitorCount(count);
+      try {
+        const visitors = await fetchVisitorData();
+        setVisitorCount(visitors.length);
+        setCurrentVisitors(visitors);
+      } catch (error) {
+        console.error('Error fetching visitor data:', error);
+      }
     };
 
     const today = new Date();
-    const formattedDate = today.toLocaleDateString('en-GB', {
+    const jakartaOffset = 7 * 60; // Jakarta is UTC+7
+    const jakartaTime = new Date(today.getTime() + (jakartaOffset - today.getTimezoneOffset()) * 60000);
+    const formattedDate = jakartaTime.toLocaleDateString('en-GB', {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
@@ -22,12 +43,6 @@ const Admin: React.FC = () => {
     setCurrentDate(formattedDate);
 
     fetchVisitorCount();
-
-    // Example visitor data
-    setCurrentVisitors([
-      { visitor_id: 1, visitor_img: '/path/to/image1.jpg', visitor_name: 'John Doe', visitor_from: 'Company A', visitor_host: 'Jane Smith', visitor_needs: 'Meeting', visitor_amount: 1, visitor_vehicle: 'B1234XYZ', visitor_checkin: '09:00', visitor_checkout: '' },
-      // Additional visitor data
-    ]);
   }, []);
 
   const totalPages = Math.ceil(currentVisitors.length / itemsPerPage);
@@ -36,16 +51,8 @@ const Admin: React.FC = () => {
     setCurrentPage(newPage);
   };
 
-  const handlePrint = (visitorId: number) => {
-    console.log(`Printing for visitor ${visitorId}`);
-  };
-
-  const handleCheckOut = (visitorId: number) => {
-    console.log(`Checking out visitor ${visitorId}`);
-  };
-
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6 space-y-6 font-sans"> {/* Poppins applied via font-sans */}
       {/* Cards Row */}
       <div className="flex justify-between w-full max-w-4xl space-x-2">
         {/* Visitor Count Card */}
@@ -57,51 +64,46 @@ const Admin: React.FC = () => {
         {/* Date Card */}
         <div className="bg-white shadow-lg rounded-lg p-4 w-1/2 max-w-xs text-center">
           <h2 className="text-2xl font-semibold">Tanggal hari ini</h2>
-          <p className="text-xl mt-2 text-gray-700">{currentDate}</p>
+          <p className="text-xl mt-2 text-gray-600">{currentDate}</p>
         </div>
       </div>
 
       {/* Visitor Table */}
-      <div className="overflow-x-auto w-full max-w-4xl mt-10"> {/* Increased mt to 10 for spacing */}
-        <table className="min-w-full bg-white border border-gray-200">
-          <thead>
+      <div className="relative overflow-x-auto shadow-md rounded-lg border border-gray-300 w-full max-w-4xl mt-10">
+        <table className="w-full text-sm text-gray-700">
+          <thead className="bg-gray-100 text-base text-gray-700">
             <tr>
-              <th className="w-10 h-10 px-4 py-2 border-b bg-gray-100 text-center text-sm font-semibold text-gray-700">Foto</th>
-              <th className="px-4 py-2 border-b bg-gray-100 text-center text-sm font-semibold text-gray-700">No Identitas</th>
-              <th className="px-4 py-2 border-b bg-gray-100 text-center text-sm font-semibold text-gray-700">Nama</th>
-              <th className="px-4 py-2 border-b bg-gray-100 text-center text-sm font-semibold text-gray-700">Dari</th>
-              <th className="px-4 py-2 border-b bg-gray-100 text-center text-sm font-semibold text-gray-700">Bertemu</th>
-              <th className="px-4 py-2 border-b bg-gray-100 text-center text-sm font-semibold text-gray-700">Keperluan</th>
-              <th className="px-4 py-2 border-b bg-gray-100 text-center text-sm font-semibold text-gray-700">Jumlah Tamu</th>
-              <th className="px-4 py-2 border-b bg-gray-100 text-center text-sm font-semibold text-gray-700">Nomor Kendaraan</th>
-              <th className="px-4 py-2 border-b bg-gray-100 text-center text-sm font-semibold text-gray-700">Check-in</th>
-              <th className="px-4 py-2 border-b bg-gray-100 text-center text-sm font-semibold text-gray-700">Check-out</th>
-              <th className="px-4 py-2 border-b bg-gray-100 text-center text-sm font-semibold text-gray-700">Action</th>
+              <th className="py-3 px-2 text-center border-b border-b-gray-400 w-24">Foto</th>
+              <th className="py-3 px-2 text-center border-b border-b-gray-400 w-40">No Identitas</th>
+              <th className="py-3 px-2 text-center border-b border-b-gray-400">Nama</th>
+              <th className="py-3 px-2 text-center border-b border-b-gray-400">Dari</th>
+              <th className="py-3 px-2 text-center border-b border-b-gray-400">Bertemu</th>
+              <th className="py-3 px-2 text-center border-b border-b-gray-400">Keperluan</th>
+              <th className="py-3 px-2 text-center border-b border-b-gray-400">Jumlah Tamu</th>
+              <th className="py-3 px-2 text-center border-b border-b-gray-400">Nomor Kendaraan</th>
+              <th className="py-3 px-2 text-center border-b border-b-gray-400 w-40">Check-in</th>
+              <th className="py-3 px-2 text-center border-b border-b-gray-400 w-40">Check-out</th>
             </tr>
           </thead>
           <tbody>
             {currentVisitors.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage).map((visitor) => (
-              <tr key={visitor.visitor_id} className="hover:bg-gray-50">
-                <td className="px-4 py-2 border-b text-center">
-                  <img src={visitor.visitor_img} alt="Visitor" className="w-10 h-10 rounded-full mx-auto" />
+              <tr key={visitor.visitor_id} className="odd:bg-white even:bg-gray-50 border-b">
+                <td className="px-2 py-3 text-center">
+                  <img
+                    src={`http://127.0.0.1:8000/storage/${visitor.visitor_img}`}
+                    alt={`Visitor ${visitor.visitor_name}`}
+                    className="w-12 h-12 rounded-full object-cover mx-auto"
+                  />
                 </td>
-                <td className="px-4 py-2 border-b text-center">{visitor.visitor_id}</td>
-                <td className="px-4 py-2 border-b text-center">{visitor.visitor_name}</td>
-                <td className="px-4 py-2 border-b text-center">{visitor.visitor_from}</td>
-                <td className="px-4 py-2 border-b text-center">{visitor.visitor_host}</td>
-                <td className="px-4 py-2 border-b text-center">{visitor.visitor_needs}</td>
-                <td className="px-4 py-2 border-b text-center">{visitor.visitor_amount}</td>
-                <td className="px-4 py-2 border-b text-center">{visitor.visitor_vehicle}</td>
-                <td className="px-4 py-2 border-b text-center">{visitor.visitor_checkin}</td>
-                <td className="px-4 py-2 border-b text-center">{visitor.visitor_checkout || '-'}</td>
-                <td className="px-4 py-2 border-b text-center">
-                  <button onClick={() => handlePrint(visitor.visitor_id)} className="mr-2">
-                    <img src="/icon_printer.svg" alt="Print" className="w-4 h-4 inline"/>
-                  </button>
-                  <button onClick={() => handleCheckOut(visitor.visitor_id)}>
-                    <img src="/icon_logout.svg" alt="Checkout" className="w-4 h-4 inline"/>
-                  </button>
-                </td>
+                <td className="px-2 py-3 text-center text-sm text-gray-600 font-medium">{visitor.visitor_id}</td>
+                <td className="px-2 py-3 text-center text-sm text-gray-700 font-medium">{visitor.visitor_name}</td>
+                <td className="px-2 py-3 text-center text-sm text-gray-600">{visitor.visitor_from}</td>
+                <td className="px-2 py-3 text-center text-sm text-gray-600">{visitor.visitor_host}</td>
+                <td className="px-2 py-3 text-center text-sm text-gray-600">{visitor.visitor_needs}</td>
+                <td className="px-2 py-3 text-center text-sm text-gray-600">{visitor.visitor_amount}</td>
+                <td className="px-2 py-3 text-center text-sm text-gray-600">{visitor.visitor_vehicle}</td>
+                <td className="px-2 py-3 text-center text-sm text-gray-600">{visitor.visitor_checkin}</td>
+                <td className="px-2 py-3 text-center text-sm text-gray-600">{visitor.visitor_checkout || '-'}</td>
               </tr>
             ))}
           </tbody>
@@ -112,7 +114,7 @@ const Admin: React.FC = () => {
       {currentVisitors.length > itemsPerPage && (
         <div className="flex justify-center items-center space-x-2 mt-4">
           <button
-            className={`px-3 py-1 rounded ${currentPage === 1 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-blue-500 text-white'}`}
+            className={`px-3 py-1 rounded ${currentPage === 1 ? 'bg-gray-300 text-gray-500 cursor-not-allowed' : 'bg-blue-600 text-white'}`}
             onClick={() => handlePageChange(currentPage - 1)}
             disabled={currentPage === 1}
           >
@@ -124,7 +126,7 @@ const Admin: React.FC = () => {
             onClick={() => handlePageChange(currentPage + 1)}
             disabled={currentPage === totalPages}
           >
-             &gt;
+            &gt;
           </button>
         </div>
       )}
@@ -132,4 +134,4 @@ const Admin: React.FC = () => {
   );
 };
 
-export default Admin;
+export default Security;

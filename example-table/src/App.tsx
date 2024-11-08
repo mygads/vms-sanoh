@@ -30,7 +30,6 @@ const App: React.FC = () => {
         <Route element={<DefaultLayout />}>
           <Route path="/security" element={<Security />} />
           <Route path="/security/visitor-log" element={<VisitorLog />} />
-          <Route path="/security/employees" element={<Employees />} />
         </Route>
       </Routes>
     </Router>

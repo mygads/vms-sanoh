@@ -143,7 +143,7 @@ const CheckOutPage: React.FC = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="11" className="text-center py-4">
+                <td colSpan={11} className="text-center py-4">
                   No visitors available for today.
                 </td>
               </tr>

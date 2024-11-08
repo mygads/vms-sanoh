@@ -81,7 +81,7 @@ const CheckInForm: React.FC = () => {
   };
 
   const handleImageCapture = async (imageData: string) => {
-    const visitorData = { ...formData, visitor_img: imageData };
+    const visitorData = { ...formData, visitor_img: imageData, department: formData.department || '' };
 
     try {
       await submitVisitorData(visitorData);
