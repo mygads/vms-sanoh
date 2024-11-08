@@ -10,7 +10,8 @@ import Security from './components/Security/Security';
 import Admin from './components/Admin/Admin';
 import VisitorLog from "./components/Admin/VisitorLog";
 import Employees from "./components/Admin/Employees";
-import DefaultLayout from "./components/DefaultLayout";
+import DefaultLayoutAdmin from "./components/DefaultLayoutAdmin";
+import DefaultLayoutSecurity from "./components/DefaultLayoutSecurity";
 import './index.css';
 
 const App: React.FC = () => {
@@ -22,12 +23,12 @@ const App: React.FC = () => {
         <Route path="/tablet/checkin" element={<CheckInForm />} />
         <Route path="/tablet/checkout" element={<CheckOutPage />} />
         <Route path="/tablet/print/:visitorId" element={<PrintReceipt />} />
-        <Route element={<DefaultLayout />}>
+        <Route element={<DefaultLayoutAdmin />}>
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/visitor-log" element={<VisitorLog />} />
           <Route path="/admin/employees" element={<Employees />} />
         </Route>
-        <Route element={<DefaultLayout />}>
+        <Route element={<DefaultLayoutSecurity />}>
           <Route path="/security" element={<Security />} />
           <Route path="/security/visitor-log" element={<VisitorLog />} />
           <Route path="/security/employees" element={<Employees />} />
