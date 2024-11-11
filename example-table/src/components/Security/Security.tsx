@@ -16,7 +16,7 @@ interface Visitor {
 
 const Security: React.FC = () => {
   const [visitorCount, setVisitorCount] = useState<number>(0);
-  const [currentDate] = useState<string>('');
+  const [currentDate, setCurrentDate] = useState<string>('');
   const [currentVisitors, setCurrentVisitors] = useState<Visitor[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 5;
@@ -32,15 +32,13 @@ const Security: React.FC = () => {
       }
     };
 
-    // const today = new Date();
-    // const jakartaOffset = 7 * 60; // Jakarta is UTC+7
-    // const jakartaTime = new Date(today.getTime() + (jakartaOffset - today.getTimezoneOffset()) * 60000);
-    // const formattedDate = jakartaTime.toLocaleDateString('en-GB', {
-    //   day: 'numeric',
-    //   month: 'long',
-    //   year: 'numeric',
-    // });
-    // setCurrentDate(formattedDate);
+    const today = new Date();
+    const formattedDate = today.toLocaleDateString('en-GB', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric',
+    });
+    setCurrentDate(formattedDate);
 
     fetchVisitorCount();
   }, []);

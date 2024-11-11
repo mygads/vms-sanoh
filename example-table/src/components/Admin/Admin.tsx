@@ -33,9 +33,7 @@ const Admin: React.FC = () => {
     };
 
     const today = new Date();
-    const jakartaOffset = 7 * 60; // Jakarta is UTC+7
-    const jakartaTime = new Date(today.getTime() + (jakartaOffset - today.getTimezoneOffset()) * 60000);
-    const formattedDate = jakartaTime.toLocaleDateString('en-GB', {
+    const formattedDate = today.toLocaleDateString('en-GB', {
       day: 'numeric',
       month: 'long',
       year: 'numeric',
