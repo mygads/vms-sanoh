@@ -50,9 +50,9 @@ const CheckOutPage: React.FC = () => {
     }
   };
 
-  const handlePrint = (visitorId: string) => {
-    navigate(`/tablet/print/${visitorId}`);
-  };
+  // const handlePrint = (visitorId: string) => {
+  //   navigate(`/tablet/print/${visitorId}`);
+  // };
 
   const totalPages = Math.ceil(filteredVisitors.length / itemsPerPage);
 
@@ -130,9 +130,9 @@ const CheckOutPage: React.FC = () => {
                   <td className="px-2 py-3 text-center text-sm">
                     {!visitor.visitor_checkout && (
                       <div className="flex justify-center space-x-4">
-                        <button onClick={() => handlePrint(visitor.visitor_id)} aria-label="Print" className="focus:outline-none">
+                        {/* <button onClick={() => handlePrint(visitor.visitor_id)} aria-label="Print" className="focus:outline-none">
                           <img src="/icon_printer.svg" alt="Print" className="w-5 h-5" />
-                        </button>
+                        </button> */}
                         <button onClick={() => handleCheckOut(visitor.visitor_id)} aria-label="Check-out" className="focus:outline-none">
                           <img src="/icon_logout.svg" alt="Check-out" className="w-5 h-5" />
                         </button>

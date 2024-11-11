@@ -59,7 +59,7 @@ export const checkOutVisitor = async (visitorId: string): Promise<void> => {
 export const allVisitor = async (): Promise<Visitor[]> => {
   try {
     const response = await axios.get('http://127.0.0.1:8000/api/index');
-    return response.data;
+    return response.data.data;
   } catch (error) {
     console.error('Error fetching visitor data:', error);
     throw error;

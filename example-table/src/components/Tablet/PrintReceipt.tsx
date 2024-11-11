@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import html2pdf from 'html2pdf.js';
+// import html2pdf from 'html2pdf.js';
 import axios from 'axios';
 
 export interface Visitor {
@@ -35,12 +35,12 @@ const ReceiptComponent: React.FC = () => {
     }
   }, [visitorId]);
 
-  const generatePDF = () => {
-    const element = document.getElementById('receipt');
-    if (element) {
-      html2pdf().from(element).save(`visitor_${visitorId}_receipt.pdf`);
-    }
-  };
+  // const generatePDF = () => {
+  //   const element = document.getElementById('receipt');
+  //   if (element) {
+  //     html2pdf().from(element).save(`visitor_${visitorId}_receipt.pdf`);
+  //   }
+  // };
 
   return (
     <div className="bg-gray-100 flex items-center justify-center h-screen">
@@ -68,12 +68,12 @@ const ReceiptComponent: React.FC = () => {
             <p>Thank You for Visiting!</p>
           </div>
         </div>
-        <button
+        {/* <button
           onClick={generatePDF}
           className="mt-4 w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-700"
         >
           Save as PDF
-        </button>
+        </button> */}
       </div>
     </div>
   );

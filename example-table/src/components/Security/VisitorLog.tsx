@@ -50,10 +50,6 @@ const VisitorLog: React.FC = () => {
     setCurrentPage(1);
   }, [filter, visitors]);
 
-  // const handlePrint = (visitorId: string) => {
-  //   navigate(`/print/${visitorId}`);
-  // };
-
   const handleCheckOut = (visitorId: string) => {
     setVisitors((prev) =>
       prev.map((visitor) =>
@@ -124,17 +120,7 @@ const VisitorLog: React.FC = () => {
                   <td className="px-2 py-3 text-center text-sm">
                     {!visitor.visitor_checkout && (
                       <div className="flex justify-center space-x-4">
-                        {/* <button
-                          onClick={() => handlePrint(visitor.visitor_id)}
-                          aria-label="Print"
-                          className="focus:outline-none"
-                        >
-                          <img
-                            src="/icon_printer.svg"
-                            alt="Print"
-                            className="w-5 h-5"
-                          />
-                        </button> */}
+                        {/* Action buttons */}
                         <button
                           onClick={() => handleCheckOut(visitor.visitor_id)}
                           aria-label="Check-out"
@@ -154,7 +140,7 @@ const VisitorLog: React.FC = () => {
             ) : (
               <tr>
                 <td colSpan={11} className="text-center py-4">
-                  No visitors available for today.
+                  No visitors available.
                 </td>
               </tr>
             )}
