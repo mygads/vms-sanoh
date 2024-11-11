@@ -22,7 +22,6 @@ export interface Employee {
   email: string;
   department: string;
   phone_number: string;
-  employee_code: string;
 }
 
 // Visitor API functions
@@ -98,7 +97,7 @@ export const editEmployeeData = async (nik: string): Promise<Employee> => {
 
 export const updateEmployeeData = async (
   nik: string,
-  data: Pick<Employee, 'phone_number' | 'employee_code' | 'department' | 'email'>
+  data: Pick<Employee, 'phone_number' | 'department' | 'email'>
 ): Promise<void> => {
   try {
     await axios.put(`http://127.0.0.1:8000/api/update/${nik}`, data);

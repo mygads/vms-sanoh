@@ -8,7 +8,6 @@ interface Employee {
   department: string;
   nik: string;
   phone_number: string;
-  employee_code: string;
 }
 
 const EmployeeLog: React.FC = () => {
@@ -21,7 +20,6 @@ const EmployeeLog: React.FC = () => {
     department: '',
     nik: '',
     phone_number: '',
-    employee_code: '',
   });
   const [editingEmployeeNik, setEditingEmployeeNik] = useState<string | null>(null);
 
@@ -50,13 +48,12 @@ const EmployeeLog: React.FC = () => {
       department: formData.department,
       nik: formData.nik,
       phone_number: formData.phone_number,
-      employee_code: formData.employee_code,
     };
     try {
       await submitEmployeeData(newEmployee);
       setEmployees([...employees, newEmployee]);
       setShowForm(false);
-      setFormData({ name: '', email: '', department: '', nik: '', phone_number: '', employee_code: '' });
+      setFormData({ name: '', email: '', department: '', nik: '', phone_number: '' });
     } catch (error) {
       console.error('Error submitting employee data:', error);
     }
@@ -80,7 +77,6 @@ const EmployeeLog: React.FC = () => {
       department: employee.department,
       nik: employee.nik,
       phone_number: employee.phone_number,
-      employee_code: employee.employee_code,
     });
   };
 
@@ -91,18 +87,17 @@ const EmployeeLog: React.FC = () => {
         await updateEmployeeData(editingEmployeeNik, {
           email: formData.email,
           phone_number: formData.phone_number,
-          employee_code: formData.employee_code,
           department: formData.department,
         });
         setEmployees(
           employees.map((employee) =>
             employee.nik === editingEmployeeNik
-              ? { ...employee, email: formData.email, phone_number: formData.phone_number, employee_code: formData.employee_code, department: formData.department }
+              ? { ...employee, email: formData.email, phone_number: formData.phone_number, department: formData.department }
               : employee
           )
         );
         setEditForm(false);
-        setFormData({ name: '', email: '', department: '', nik: '', phone_number: '', employee_code: '' });
+        setFormData({ name: '', email: '', department: '', nik: '', phone_number: '' });
         setEditingEmployeeNik(null);
       } catch (error) {
         console.error('Error editing employee data:', error);
@@ -118,7 +113,7 @@ const EmployeeLog: React.FC = () => {
         <button
           onClick={() => {
             setShowForm(true);
-            setFormData({ name: '', email: '', department: '', nik: '', phone_number: '', employee_code: '' });
+            setFormData({ name: '', email: '', department: '', nik: '', phone_number: ''});
           }}
           className="bg-blue-900 text-white px-4 py-2 rounded mb-4 hover:bg-blue-700 transition-all"
         >
@@ -185,17 +180,6 @@ const EmployeeLog: React.FC = () => {
                     required
                   />
                 </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700">Employee Code</label>
-                  <input
-                    type="text"
-                    name="employee_code"
-                    value={formData.employee_code}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded"
-                    required
-                  />
-                </div>
                 <div className="flex justify-between mt-4">
                   <button
                     type="button"
@@ -243,17 +227,6 @@ const EmployeeLog: React.FC = () => {
                   />
                 </div>
                 <div className="mb-4">
-                  <label className="block text-gray-700">Employee Code</label>
-                  <input
-                    type="text"
-                    name="employee_code"
-                    value={formData.employee_code}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded"
-                    required
-                  />
-                </div>
-                <div className="mb-4">
                   <label className="block text-gray-700">Department</label>
                   <input
                     type="text"
@@ -288,24 +261,22 @@ const EmployeeLog: React.FC = () => {
           <table className="w-full text-sm text-gray-700">
             <thead className="bg-gray-100 text-base text-gray-700">
               <tr>
-                <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Employee Name</th>
-                <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Email</th>
-                <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Department</th>
                 <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">NIK</th>
+                <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Nama</th>
+                <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Department</th>
+                <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Email</th>
                 <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Phone Number</th>
-                <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Employee Code</th>
                 <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Actions</th>
               </tr>
             </thead>
             <tbody>
               {employees.map((employee) => (
                 <tr key={employee.name} className="odd:bg-white even:bg-gray-50 border-b">
-                  <td className="px-6 py-3 text-center">{employee.name}</td>
-                  <td className="px-6 py-3 text-center">{employee.email}</td>
-                  <td className="px-6 py-3 text-center">{employee.department}</td>
                   <td className="px-6 py-3 text-center">{employee.nik}</td>
+                  <td className="px-6 py-3 text-center">{employee.name}</td>
+                  <td className="px-6 py-3 text-center">{employee.department}</td>
+                  <td className="px-6 py-3 text-center">{employee.email}</td>
                   <td className="px-6 py-3 text-center">{employee.phone_number}</td>
-                  <td className="px-6 py-3 text-center">{employee.employee_code}</td>
                   <td className="px-6 py-3 text-center">
                     <button onClick={() => handleEdit(employee)} className="text-blue-900 mr-2 hover:text-blue-700">
                       <FaPencilAlt size={20} />

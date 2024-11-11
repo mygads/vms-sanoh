@@ -5,7 +5,6 @@ interface Visitor {
   visitor_id: string;
   visitor_date: string;
   visitor_checkout: string | null;
-  // visitor_img: string;
   visitor_name: string;
   visitor_from: string;
   visitor_host: string;
@@ -21,16 +20,23 @@ const VisitorLog: React.FC = () => {
   const [filteredVisitors, setFilteredVisitors] = useState<Visitor[]>([]);
   const [filter] = useState<string>('All');
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [selectedDate, setSelectedDate] = useState<string>(() => {
+    const today = new Date().toISOString().split('T')[0];
+    return today;
+  });
   const itemsPerPage = 5;
 
-  const getData = async () => {
+  const getData = async (date: string) => {
     try {
       const response = await allVisitor();
       if (Array.isArray(response) && response.length > 0) {
-        setVisitors(response);
-        setFilteredVisitors(response);
+        const filteredByDate = response.filter(
+          (visitor) => visitor.visitor_date === date
+        );
+        setVisitors(filteredByDate);
       } else {
         console.warn('No visitor data found');
+        setVisitors([]);
       }
     } catch (error) {
       console.error('Failed to fetch visitor data:', error);
@@ -38,8 +44,8 @@ const VisitorLog: React.FC = () => {
   };
 
   useEffect(() => {
-    getData();
-  }, []);
+    getData(selectedDate);
+  }, [selectedDate]);
 
   useEffect(() => {
     const updatedVisitors =
@@ -49,16 +55,6 @@ const VisitorLog: React.FC = () => {
     setFilteredVisitors(updatedVisitors);
     setCurrentPage(1);
   }, [filter, visitors]);
-
-  const handleCheckOut = (visitorId: string) => {
-    setVisitors((prev) =>
-      prev.map((visitor) =>
-        visitor.visitor_id === visitorId
-          ? { ...visitor, visitor_checkout: new Date().toLocaleTimeString() }
-          : visitor
-      )
-    );
-  };
 
   const totalPages = Math.ceil(filteredVisitors.length / itemsPerPage);
   const currentVisitors = filteredVisitors.slice(
@@ -73,23 +69,50 @@ const VisitorLog: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-6">Visitor Log</h2>
+      {/* Header with filter */}
+      <div className="flex justify-between items-center mb-6">
+        <h2 className="text-2xl font-bold">Visitor Log</h2>
+        <div>
+          <input
+            type="date"
+            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+          />
+        </div>
+      </div>
 
       <div className="relative overflow-x-auto shadow-md rounded-lg border border-gray-300">
         <table className="w-full text-sm text-gray-700">
           <thead className="bg-gray-100 text-base text-gray-700">
             <tr>
-              {/* <th className="py-3 px-4 text-center border-b border-b-gray-400 w-20">Foto</th> */}
-              <th className="py-3 px-4 text-center border-b border-b-gray-400 w-40">No Identitas</th>
-              <th className="py-3 px-4 text-center border-b border-b-gray-400">Nama</th>
-              <th className="py-3 px-4 text-center border-b border-b-gray-400">Dari</th>
-              <th className="py-3 px-4 text-center border-b border-b-gray-400">Bertemu</th>
-              <th className="py-3 px-4 text-center border-b border-b-gray-400">Keperluan</th>
-              <th className="py-3 px-4 text-center border-b border-b-gray-400">Jumlah Tamu</th>
-              <th className="py-3 px-4 text-center border-b border-b-gray-400">Nomor Kendaraan</th>
-              <th className="py-3 px-4 text-center border-b border-b-gray-400 w-40">Check-in</th>
-              <th className="py-3 px-4 text-center border-b border-b-gray-400 w-40">Check-out</th>
-              <th className="py-3 px-4 text-center border-b border-b-gray-400 w-20">Action</th>
+              <th className="py-3 px-4 text-center border-b border-b-gray-400 w-40">
+                No Identitas
+              </th>
+              <th className="py-3 px-4 text-center border-b border-b-gray-400">
+                Nama
+              </th>
+              <th className="py-3 px-4 text-center border-b border-b-gray-400">
+                Dari
+              </th>
+              <th className="py-3 px-4 text-center border-b border-b-gray-400">
+                Bertemu
+              </th>
+              <th className="py-3 px-4 text-center border-b border-b-gray-400">
+                Keperluan
+              </th>
+              <th className="py-3 px-4 text-center border-b border-b-gray-400">
+                Jumlah Tamu
+              </th>
+              <th className="py-3 px-4 text-center border-b border-b-gray-400">
+                Nomor Kendaraan
+              </th>
+              <th className="py-3 px-4 text-center border-b border-b-gray-400 w-40">
+                Check-in
+              </th>
+              <th className="py-3 px-4 text-center border-b border-b-gray-400 w-40">
+                Check-out
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -99,48 +122,39 @@ const VisitorLog: React.FC = () => {
                   key={visitor.visitor_id}
                   className="odd:bg-white even:bg-gray-50 border-b"
                 >
-                  {/* <td className="px-2 py-3 text-center">
-                    <img
-                      src={`http://127.0.0.1:8000/storage/${visitor.visitor_img}`}
-                      alt={`Visitor ${visitor.visitor_name}`}
-                      className="w-12 h-12 rounded-full object-cover mx-auto"
-                    />
-                  </td> */}
-                  <td className="px-2 py-3 text-center text-sm">{visitor.visitor_id}</td>
-                  <td className="px-2 py-3 text-center text-sm">{visitor.visitor_name}</td>
-                  <td className="px-2 py-3 text-center text-sm">{visitor.visitor_from}</td>
-                  <td className="px-2 py-3 text-center text-sm">{visitor.visitor_host}</td>
-                  <td className="px-2 py-3 text-center text-sm">{visitor.visitor_needs}</td>
-                  <td className="px-2 py-3 text-center text-sm">{visitor.visitor_amount}</td>
-                  <td className="px-2 py-3 text-center text-sm">{visitor.visitor_vehicle}</td>
-                  <td className="px-2 py-3 text-center text-sm">{visitor.visitor_checkin}</td>
                   <td className="px-2 py-3 text-center text-sm">
-                    {visitor.visitor_checkout || '-'}
+                    {visitor.visitor_id}
                   </td>
                   <td className="px-2 py-3 text-center text-sm">
-                    {!visitor.visitor_checkout && (
-                      <div className="flex justify-center space-x-4">
-                        {/* Action buttons */}
-                        <button
-                          onClick={() => handleCheckOut(visitor.visitor_id)}
-                          aria-label="Check-out"
-                          className="focus:outline-none"
-                        >
-                          <img
-                            src="/icon_logout.svg"
-                            alt="Check-out"
-                            className="w-5 h-5"
-                          />
-                        </button>
-                      </div>
-                    )}
+                    {visitor.visitor_name}
+                  </td>
+                  <td className="px-2 py-3 text-center text-sm">
+                    {visitor.visitor_from}
+                  </td>
+                  <td className="px-2 py-3 text-center text-sm">
+                    {visitor.visitor_host}
+                  </td>
+                  <td className="px-2 py-3 text-center text-sm">
+                    {visitor.visitor_needs}
+                  </td>
+                  <td className="px-2 py-3 text-center text-sm">
+                    {visitor.visitor_amount}
+                  </td>
+                  <td className="px-2 py-3 text-center text-sm">
+                    {visitor.visitor_vehicle}
+                  </td>
+                  <td className="px-2 py-3 text-center text-sm">
+                    {visitor.visitor_checkin}
+                  </td>
+                  <td className="px-2 py-3 text-center text-sm">
+                    {visitor.visitor_checkout || '-'}
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={11} className="text-center py-4">
-                  No visitors available.
+                <td colSpan={10} className="text-center py-4">
+                  No visitors available for this date.
                 </td>
               </tr>
             )}
