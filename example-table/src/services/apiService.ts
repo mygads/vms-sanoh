@@ -11,7 +11,7 @@ export interface Visitor {
   visitor_amount: number;
   visitor_vehicle: string;
   department: string;
-  visitor_img: string;
+  // visitor_img: string;
   visitor_checkin: string;
   visitor_checkout: string | null;
 }

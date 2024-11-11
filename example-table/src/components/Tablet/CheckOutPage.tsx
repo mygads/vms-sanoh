@@ -94,7 +94,7 @@ const CheckOutPage: React.FC = () => {
         <table className="w-full text-sm text-gray-700">
           <thead className="bg-gray-100 text-base text-gray-700">
             <tr>
-              <th className="py-3 text-center border-b border-b-gray-400 w-24">Foto</th>
+              {/* <th className="py-3 text-center border-b border-b-gray-400 w-24">Foto</th> */}
               <th className="py-3 text-center border-b border-b-gray-400 w-40">No Identitas</th>
               <th className="py-3 text-center border-b border-b-gray-400">Nama</th>
               <th className="py-3 text-center border-b border-b-gray-400">Dari</th>
@@ -111,13 +111,13 @@ const CheckOutPage: React.FC = () => {
             {currentVisitors.length > 0 ? (
               currentVisitors.map((visitor) => (
                 <tr key={visitor.visitor_id} className="odd:bg-white even:bg-gray-50 border-b">
-                  <td className="px-2 py-3 text-center">
+                  {/* <td className="px-2 py-3 text-center">
                     <img
                       src={`http://127.0.0.1:8000/storage/${visitor.visitor_img}`}
                       alt={`Visitor ${visitor.visitor_name}`}
                       className="w-12 h-12 rounded-full object-cover mx-auto"
                     />
-                  </td>
+                  </td> */}
                   <td className="px-2 py-3 text-center text-sm">{visitor.visitor_id}</td>
                   <td className="px-2 py-3 text-center text-sm">{visitor.visitor_name}</td>
                   <td className="px-2 py-3 text-center text-sm">{visitor.visitor_from}</td>
