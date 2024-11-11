@@ -4,17 +4,12 @@ import logoSanoh from '/logo-sanoh.png'; // Adjust the path as needed
 
 const DefaultLayout: React.FC = () => {
   const [sidebarOpen] = useState(false);
-  const [isLoading] = useState(true);
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     localStorage.getItem('role');
   }, []);
-
-  if (isLoading) {
-    return <div>Loading...</div>;
-  }
 
   const isSecurity = location.pathname.startsWith('/security');
 
