@@ -50,9 +50,19 @@ const CheckOutPage: React.FC = () => {
     }
   };
 
-  // const handlePrint = (visitorId: string) => {
-  //   navigate(`/tablet/print/${visitorId}`);
-  // };
+  // Function to map visitor_needs to color classes
+  const getVisitorNeedsClass = (needs: string) => {
+    switch (needs) {
+      case 'Meeting':
+        return 'text-blue-600 font-semibold';
+      case 'Delivery':
+        return 'text-green-600 font-semibold';
+      case 'Contractor':
+        return 'text-red-600 font-semibold';
+      default:
+        return 'text-gray-700';
+    }
+  };
 
   const totalPages = Math.ceil(filteredVisitors.length / itemsPerPage);
 
@@ -95,15 +105,10 @@ const CheckOutPage: React.FC = () => {
           <thead className="bg-gray-100 text-base text-gray-700">
             <tr>
               {/* <th className="py-3 text-center border-b border-b-gray-400 w-24">Foto</th> */}
-              <th className="py-3 text-center border-b border-b-gray-400 w-40">No Identitas</th>
+              <th className="py-3 text-center border-b border-b-gray-400 w-40">No Visitor</th>
               <th className="py-3 text-center border-b border-b-gray-400">Nama</th>
-              <th className="py-3 text-center border-b border-b-gray-400">Dari</th>
-              <th className="py-3 text-center border-b border-b-gray-400">Bertemu</th>
+              <th className="py-3 text-center border-b border-b-gray-400">Perusahaan</th>
               <th className="py-3 text-center border-b border-b-gray-400">Keperluan</th>
-              <th className="py-3 text-center border-b border-b-gray-400">Jumlah Tamu</th>
-              <th className="py-3 text-center border-b border-b-gray-400">Nomor Kendaraan</th>
-              <th className="py-3 text-center border-b border-b-gray-400 w-40">Check-in</th>
-              <th className="py-3 text-center border-b border-b-gray-400 w-40">Check-out</th>
               <th className="py-3 text-center border-b border-b-gray-400">Action</th>
             </tr>
           </thead>
@@ -121,12 +126,13 @@ const CheckOutPage: React.FC = () => {
                   <td className="px-2 py-3 text-center text-sm">{visitor.visitor_id}</td>
                   <td className="px-2 py-3 text-center text-sm">{visitor.visitor_name}</td>
                   <td className="px-2 py-3 text-center text-sm">{visitor.visitor_from}</td>
-                  <td className="px-2 py-3 text-center text-sm">{visitor.visitor_host}</td>
-                  <td className="px-2 py-3 text-center text-sm">{visitor.visitor_needs}</td>
-                  <td className="px-2 py-3 text-center text-sm">{visitor.visitor_amount}</td>
-                  <td className="px-2 py-3 text-center text-sm">{visitor.visitor_vehicle}</td>
-                  <td className="px-2 py-3 text-center text-sm">{visitor.visitor_checkin}</td>
-                  <td className="px-2 py-3 text-center text-sm">{visitor.visitor_checkout || '-'}</td>
+                  {/* Updated code starts here */}
+                  <td className="px-2 py-3 text-center text-sm">
+                    <span className={getVisitorNeedsClass(visitor.visitor_needs)}>
+                      {visitor.visitor_needs}
+                    </span>
+                  </td>
+                  {/* Updated code ends here */}
                   <td className="px-2 py-3 text-center text-sm">
                     {!visitor.visitor_checkout && (
                       <div className="flex justify-center space-x-4">

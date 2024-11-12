@@ -14,8 +14,11 @@ interface VisitorData {
 }
 
 const CheckInForm: React.FC = () => {
+  // Define today's date in YYYY-MM-DD format
+  const today = new Date().toISOString().split('T')[0];
+
   const [formData, setFormData] = useState<VisitorData>({
-    visitor_date: '',
+    visitor_date: today, // Set default date to today
     visitor_name: '',
     visitor_from: '',
     visitor_host: '',
@@ -44,10 +47,29 @@ const CheckInForm: React.FC = () => {
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    let updatedFormData = { ...formData, [name]: value };
+
+    if (name === 'visitor_needs') {
+      if (value === 'Delivery') {
+        updatedFormData.visitor_host = 'Warehouse';
+        updatedFormData.department = '';
+        setSuggestions([]);
+      } else {
+        if (updatedFormData.visitor_host === 'Warehouse') {
+          updatedFormData.visitor_host = '';
+          updatedFormData.department = '';
+        }
+      }
+    }
+
+    setFormData(updatedFormData);
   };
 
   const handleVisitorHostChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (formData.visitor_needs === 'Delivery') {
+      return; // Do nothing if visitor_needs is 'Delivery'
+    }
     const value = e.target.value;
     setFormData({ ...formData, visitor_host: value, department: '' });
 
@@ -84,8 +106,6 @@ const CheckInForm: React.FC = () => {
     }
   };
 
-  const today = new Date().toISOString().split('T')[0];
-
   return (
     <div className="flex flex-col items-center p-8 bg-gray-100 min-h-screen">
       <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg">
@@ -96,11 +116,14 @@ const CheckInForm: React.FC = () => {
               type="date"
               name="visitor_date"
               min={today}
+              value={formData.visitor_date} // Set value to formData.visitor_date
               onChange={handleChange}
               required
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
             />
           </label>
+
+          {/* Rest of your form fields */}
 
           <label className="block">
             <span className="text-gray-700">Nama:</span>
@@ -152,6 +175,7 @@ const CheckInForm: React.FC = () => {
               required
               autoComplete="off"
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
+              readOnly={formData.visitor_needs === 'Delivery'}
             />
             {suggestions.length > 0 && (
               <ul className="absolute z-10 bg-white border border-gray-300 mt-1 max-h-40 w-full overflow-y-auto">

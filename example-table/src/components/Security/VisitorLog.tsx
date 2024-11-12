@@ -67,6 +67,20 @@ const VisitorLog: React.FC = () => {
     setCurrentPage(newPage);
   };
 
+  // Function to map visitor_needs to color classes
+  const getVisitorNeedsClass = (needs: string) => {
+    switch (needs) {
+      case 'Meeting':
+        return 'text-blue-600 font-semibold';
+      case 'Delivery':
+        return 'text-green-600 font-semibold';
+      case 'Contractor':
+        return 'text-red-600 font-semibold';
+      default:
+        return 'text-gray-700';
+    }
+  };
+
   return (
     <div className="container mx-auto p-4">
       {/* Header with filter */}
@@ -87,16 +101,16 @@ const VisitorLog: React.FC = () => {
           <thead className="bg-gray-100 text-base text-gray-700">
             <tr>
               <th className="py-3 px-4 text-center border-b border-b-gray-400 w-40">
-                No Identitas
+                No Visitor
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400">
                 Nama
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400">
-                Dari
+                Perusahaan
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400">
-                Bertemu
+                Host
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400">
                 Keperluan
@@ -134,9 +148,13 @@ const VisitorLog: React.FC = () => {
                   <td className="px-2 py-3 text-center text-sm">
                     {visitor.visitor_host}
                   </td>
+                  {/* Updated code starts here */}
                   <td className="px-2 py-3 text-center text-sm">
-                    {visitor.visitor_needs}
+                    <span className={getVisitorNeedsClass(visitor.visitor_needs)}>
+                      {visitor.visitor_needs}
+                    </span>
                   </td>
+                  {/* Updated code ends here */}
                   <td className="px-2 py-3 text-center text-sm">
                     {visitor.visitor_amount}
                   </td>

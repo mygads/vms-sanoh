@@ -1,4 +1,3 @@
-// Security.tsx
 import React, { useEffect, useState } from 'react';
 import { fetchVisitorData } from '../../services/apiService';
 
@@ -81,26 +80,44 @@ const Security: React.FC = () => {
     setCurrentPage(newPage);
   };
 
+  // Function to map visitor_needs to color classes
+  const getVisitorNeedsClass = (needs: string) => {
+    switch (needs) {
+      case 'Meeting':
+        return 'text-blue-600 font-semibold';
+      case 'Delivery':
+        return 'text-green-600 font-semibold';
+      case 'Contractor':
+        return 'text-red-600 font-semibold';
+      default:
+        return 'text-gray-700';
+    }
+  };
+
   return (
-    <div className="p-6 space-y-6 font-sans">
+    <div className="flex flex-col items-center space-y-6 font-sans">
       {/* Cards Row */}
-      <div className="flex justify-between w-full max-w-6xl space-x-4">
+      <div className="flex justify-between w-full space-x-4">
         {/* Visitor Count Card */}
-        <div className="bg-white shadow-lg rounded-lg p-4 w-1/3 text-center">
-          <h2 className="text-2xl font-semibold">Jumlah visitor hari ini</h2>
-          <p className="text-4xl mt-2 text-blue-600 font-bold">{visitorCount}</p>
+        <div className="bg-white shadow-lg rounded-lg p-4 flex-1 text-center">
+          <h2 className="text-2xl font-semibold">Visitor Active</h2>
+          <p className="text-4xl mt-2 text-blue-600 font-bold">
+            {visitorCount}
+          </p>
         </div>
 
         {/* Date Card */}
-        <div className="bg-white shadow-lg rounded-lg p-4 w-1/3 text-center">
+        <div className="bg-white shadow-lg rounded-lg p-4 flex-1 text-center">
           <h2 className="text-2xl font-semibold">Tanggal hari ini</h2>
           <p className="text-xl mt-2 text-gray-600">{currentDate}</p>
         </div>
 
         {/* Time Card */}
-        <div className="bg-white shadow-lg rounded-lg p-4 w-1/3 text-center">
-          <h2 className="text-2xl font-semibold">Waktu (Jakarta)</h2>
-          <p className="text-4xl mt-2 text-blue-600 font-bold">{currentTime}</p>
+        <div className="bg-white shadow-lg rounded-lg p-4 flex-1 text-center">
+          <h2 className="text-2xl font-semibold">Waktu</h2>
+          <p className="text-4xl mt-2 text-blue-600 font-bold">
+            {currentTime}
+          </p>
         </div>
       </div>
 
@@ -159,9 +176,13 @@ const Security: React.FC = () => {
                     <td className="px-2 py-3 text-center text-sm text-gray-600">
                       {visitor.visitor_host}
                     </td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-600">
-                      {visitor.visitor_needs}
+                    {/* Updated code starts here */}
+                    <td className="px-2 py-3 text-center text-sm">
+                      <span className={getVisitorNeedsClass(visitor.visitor_needs)}>
+                        {visitor.visitor_needs}
+                      </span>
                     </td>
+                    {/* Updated code ends here */}
                     <td className="px-2 py-3 text-center text-sm text-gray-600">
                       {visitor.visitor_amount}
                     </td>
