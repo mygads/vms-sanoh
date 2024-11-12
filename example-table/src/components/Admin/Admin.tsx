@@ -164,10 +164,10 @@ const Admin: React.FC = () => {
                     key={visitor.visitor_id}
                     className="odd:bg-white even:bg-gray-50 border-b"
                   >
-                    <td className="px-2 py-3 text-center text-sm text-gray-600 font-medium">
+                    <td className="px-2 py-3 text-center text-sm text-gray-600">
                       {visitor.visitor_id}
                     </td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700 font-medium">
+                    <td className="px-2 py-3 text-center text-sm text-gray-700">
                       {visitor.visitor_name}
                     </td>
                     <td className="px-2 py-3 text-center text-sm text-gray-600">
