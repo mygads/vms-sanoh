@@ -206,16 +206,6 @@ const EmployeeLog: React.FC = () => {
               <h2 className="text-2xl font-bold mb-3 mt-6 text-center">Edit Employee Details</h2>
               <form onSubmit={handleEditFormSubmit}>
                 <div className="mb-4">
-                  <label className="block text-gray-700">Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded"
-                  />
-                </div>
-                <div className="mb-4">
                   <label className="block text-gray-700">Phone Number</label>
                   <input
                     type="text"
