@@ -20,20 +20,34 @@ const VisitorLog: React.FC = () => {
   const [filteredVisitors, setFilteredVisitors] = useState<Visitor[]>([]);
   const [filter] = useState<string>('All');
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [selectedDate, setSelectedDate] = useState<string>(() => {
+  const [selectedStartDate, setSelectedStartDate] = useState<string>(() => {
+    const today = new Date().toISOString().split('T')[0];
+    return today;
+  });
+  const [selectedEndDate, setSelectedEndDate] = useState<string>(() => {
     const today = new Date().toISOString().split('T')[0];
     return today;
   });
   const itemsPerPage = 5;
 
-  const getData = async (date: string) => {
+  const getData = async (startDate: string, endDate: string) => {
     try {
       const response = await allVisitor();
       if (Array.isArray(response) && response.length > 0) {
-        const filteredByDate = response.filter(
-          (visitor) => visitor.visitor_date === date
-        );
-        setVisitors(filteredByDate);
+        const filteredByDate = response.filter((visitor) => {
+          return (
+            visitor.visitor_date >= startDate && visitor.visitor_date <= endDate
+          );
+        });
+
+        // Sort the filtered visitors by check-in time
+        const sortedByCheckin = filteredByDate.sort((a, b) => {
+          const timeA = new Date(`${a.visitor_date} ${a.visitor_checkin}`).getTime();
+          const timeB = new Date(`${b.visitor_date} ${b.visitor_checkin}`).getTime();
+          return timeA - timeB;
+        });
+
+        setVisitors(sortedByCheckin);
       } else {
         console.warn('No visitor data found');
         setVisitors([]);
@@ -44,8 +58,8 @@ const VisitorLog: React.FC = () => {
   };
 
   useEffect(() => {
-    getData(selectedDate);
-  }, [selectedDate]);
+    getData(selectedStartDate, selectedEndDate);
+  }, [selectedStartDate, selectedEndDate]);
 
   useEffect(() => {
     const updatedVisitors =
@@ -67,31 +81,38 @@ const VisitorLog: React.FC = () => {
     setCurrentPage(newPage);
   };
 
-  // Function to map visitor_needs to color classes
-  const getVisitorNeedsClass = (needs: string) => {
+  // Function to map visitor_needs to row background color classes
+  const getRowColorClass = (needs: string) => {
     switch (needs) {
       case 'Meeting':
-        return 'text-blue-600 font-semibold';
+        return 'bg-blue-100';
       case 'Delivery':
-        return 'text-green-600 font-semibold';
+        return 'bg-green-100';
       case 'Contractor':
-        return 'text-red-600 font-semibold';
+        return 'bg-red-100';
       default:
-        return 'text-gray-700';
+        return 'bg-white';
     }
   };
 
   return (
     <div className="container mx-auto p-4">
-      {/* Header with filter */}
+      {/* Header with date range filter */}
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Visitor Log</h2>
-        <div>
+        <div className="flex items-center space-x-2">
           <input
             type="date"
             className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
+            value={selectedStartDate}
+            onChange={(e) => setSelectedStartDate(e.target.value)}
+          />
+          <span className="mx-2">to</span>
+          <input
+            type="date"
+            className="px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            value={selectedEndDate}
+            onChange={(e) => setSelectedEndDate(e.target.value)}
           />
         </div>
       </div>
@@ -134,7 +155,9 @@ const VisitorLog: React.FC = () => {
               currentVisitors.map((visitor) => (
                 <tr
                   key={visitor.visitor_id}
-                  className="odd:bg-white even:bg-gray-50 border-b"
+                  className={`${getRowColorClass(
+                    visitor.visitor_needs
+                  )} border-b`}
                 >
                   <td className="px-2 py-3 text-center text-sm">
                     {visitor.visitor_id}
@@ -148,13 +171,9 @@ const VisitorLog: React.FC = () => {
                   <td className="px-2 py-3 text-center text-sm">
                     {visitor.visitor_host}
                   </td>
-                  {/* Updated code starts here */}
                   <td className="px-2 py-3 text-center text-sm">
-                    <span className={getVisitorNeedsClass(visitor.visitor_needs)}>
-                      {visitor.visitor_needs}
-                    </span>
+                    {visitor.visitor_needs}
                   </td>
-                  {/* Updated code ends here */}
                   <td className="px-2 py-3 text-center text-sm">
                     {visitor.visitor_amount}
                   </td>
@@ -172,7 +191,7 @@ const VisitorLog: React.FC = () => {
             ) : (
               <tr>
                 <td colSpan={10} className="text-center py-4">
-                  No visitors available for this date.
+                  No visitors available for this date range.
                 </td>
               </tr>
             )}

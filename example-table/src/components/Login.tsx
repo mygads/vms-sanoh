@@ -9,9 +9,9 @@ interface User {
 }
 
 const users: User[] = [
-  { username: 'visitor', password: '1234abcd', role: 'visitor' },
-  { username: 'security', password: '1234abcd', role: 'security' },
-  { username: 'admin', password: '1234abcd', role: 'admin' },
+  { username: 'visitor', password: '1234', role: 'visitor' },
+  { username: 'security', password: '1234', role: 'security' },
+  { username: 'admin', password: '1234', role: 'admin' },
 ];
 
 const Login: React.FC = () => {

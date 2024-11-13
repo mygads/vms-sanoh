@@ -13,6 +13,7 @@ export interface Visitor {
   visitor_host: string;
   visitor_needs: string;
   visitor_amount: number;
+  department: string;
   visitor_vehicle: string;
   visitor_checkin: string;
   visitor_checkout: string | null;
@@ -88,10 +89,10 @@ const ReceiptComponent: React.FC = () => {
               Nama: <span className="font-normal">{visitorData.visitor_name}</span>
             </p>
             <p className="font-semibold text-sm text-gray-700">
-              Asal Perusahaan: <span className="font-normal">{visitorData.visitor_from}</span>
+              Perusahaan: <span className="font-normal">{visitorData.visitor_from}</span>
             </p>
             <p className="font-semibold text-sm text-gray-700">
-              Host: <span className="font-normal">{visitorData.visitor_host}</span>
+              Host: <span className="font-normal">{visitorData.visitor_host} - {visitorData.department}</span>
             </p>
             <p className="font-semibold text-sm text-gray-700">
               Keperluan: <span className="font-normal">{visitorData.visitor_needs}</span>

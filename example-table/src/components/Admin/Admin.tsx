@@ -22,7 +22,9 @@ const Admin: React.FC = () => {
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 5;
 
+  // Data Fetching useEffect
   useEffect(() => {
+    // Function to fetch visitor data
     const fetchVisitorDataToday = async () => {
       try {
         const visitors = await fetchVisitorData();
@@ -43,9 +45,18 @@ const Admin: React.FC = () => {
       }
     };
 
-    // Fetch visitor data
+    // Fetch data immediately
     fetchVisitorDataToday();
 
+    // Set up interval to fetch data every 5 seconds
+    const dataInterval = setInterval(fetchVisitorDataToday, 5000);
+
+    // Cleanup function to clear the interval
+    return () => clearInterval(dataInterval);
+  }, []);
+
+  // Time Updating useEffect
+  useEffect(() => {
     // Set current date
     const today = new Date();
     const formattedDate = today.toLocaleDateString('en-GB', {
@@ -55,7 +66,7 @@ const Admin: React.FC = () => {
     });
     setCurrentDate(formattedDate);
 
-    // Set current time based on Jakarta timezone
+    // Function to update time
     const updateTime = () => {
       const jakartaTime = new Date().toLocaleString('en-US', {
         timeZone: 'Asia/Jakarta',
@@ -67,11 +78,14 @@ const Admin: React.FC = () => {
       setCurrentTime(jakartaTime);
     };
 
-    // Update time every second
+    // Update time immediately
     updateTime();
-    const interval = setInterval(updateTime, 1000);
 
-    return () => clearInterval(interval);
+    // Set up interval to update time every second
+    const timeInterval = setInterval(updateTime, 1000);
+
+    // Cleanup function to clear the interval
+    return () => clearInterval(timeInterval);
   }, []);
 
   const totalPages = Math.ceil(currentVisitors.length / itemsPerPage);
@@ -80,17 +94,17 @@ const Admin: React.FC = () => {
     setCurrentPage(newPage);
   };
 
-  // Function to map visitor_needs to color classes
-  const getVisitorNeedsClass = (needs: string) => {
+  // Function to map visitor_needs to row background color classes
+  const getRowColorClass = (needs: string) => {
     switch (needs) {
       case 'Meeting':
-        return 'text-blue-600 font-semibold';
+        return 'bg-blue-100';
       case 'Delivery':
-        return 'text-green-600 font-semibold';
+        return 'bg-green-100';
       case 'Contractor':
-        return 'text-red-600 font-semibold';
+        return 'bg-red-100';
       default:
-        return 'text-gray-700';
+        return 'bg-white';
     }
   };
 
@@ -114,7 +128,7 @@ const Admin: React.FC = () => {
 
         {/* Time Card */}
         <div className="bg-white shadow-lg rounded-lg p-4 flex-1 text-center">
-          <h2 className="text-2xl font-semibold">Waktu</h2>
+          <h2 className="text-2xl font-semibold">Jam</h2>
           <p className="text-4xl mt-2 text-blue-600 font-bold">
             {currentTime}
           </p>
@@ -162,7 +176,9 @@ const Admin: React.FC = () => {
                 .map((visitor) => (
                   <tr
                     key={visitor.visitor_id}
-                    className="odd:bg-white even:bg-gray-50 border-b"
+                    className={`${getRowColorClass(
+                      visitor.visitor_needs
+                    )} border-b`}
                   >
                     <td className="px-2 py-3 text-center text-sm text-gray-600">
                       {visitor.visitor_id}
@@ -176,13 +192,9 @@ const Admin: React.FC = () => {
                     <td className="px-2 py-3 text-center text-sm text-gray-600">
                       {visitor.visitor_host}
                     </td>
-                    {/* Updated code starts here */}
-                    <td className="px-2 py-3 text-center text-sm">
-                      <span className={getVisitorNeedsClass(visitor.visitor_needs)}>
-                        {visitor.visitor_needs}
-                      </span>
+                    <td className="px-2 py-3 text-center text-sm text-gray-700">
+                      {visitor.visitor_needs}
                     </td>
-                    {/* Updated code ends here */}
                     <td className="px-2 py-3 text-center text-sm text-gray-600">
                       {visitor.visitor_amount}
                     </td>
