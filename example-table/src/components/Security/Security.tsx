@@ -109,7 +109,7 @@ const Security: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center space-y-6 font-sans">
+    <div className="flex flex-col space-y-6 font-sans">
       {/* Cards Row */}
       <div className="flex justify-between w-full space-x-4">
         {/* Visitor Count Card */}

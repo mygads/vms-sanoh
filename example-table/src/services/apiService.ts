@@ -67,6 +67,16 @@ export const allVisitor = async (): Promise<Visitor[]> => {
   }
 };
 
+export const getVisitorPrintData = async (visitorId: string): Promise<Visitor> => {
+  try {
+    const response = await axios.get<Visitor>(`${apiBaseUrl}/print/${visitorId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error fetching visitor print data:', error);
+    throw error;
+  }
+};
+
 // Employee API functions
 export const fetchEmployeeData = async (): Promise<Employee[]> => {
   try {

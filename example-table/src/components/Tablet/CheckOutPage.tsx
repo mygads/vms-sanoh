@@ -50,17 +50,17 @@ const CheckOutPage: React.FC = () => {
     }
   };
 
-  // Function to map visitor_needs to color classes
-  const getVisitorNeedsClass = (needs: string) => {
+  // Function to map visitor_needs to row background color classes
+  const getRowColorClass = (needs: string) => {
     switch (needs) {
       case 'Meeting':
-        return 'text-blue-600 font-semibold';
+        return 'bg-blue-100';
       case 'Delivery':
-        return 'text-green-600 font-semibold';
+        return 'bg-green-100';
       case 'Contractor':
-        return 'text-red-600 font-semibold';
+        return 'bg-red-100';
       default:
-        return 'text-gray-700';
+        return 'bg-white';
     }
   };
 
@@ -115,7 +115,10 @@ const CheckOutPage: React.FC = () => {
           <tbody>
             {currentVisitors.length > 0 ? (
               currentVisitors.map((visitor) => (
-                <tr key={visitor.visitor_id} className="odd:bg-white even:bg-gray-50 border-b">
+                <tr
+                  key={visitor.visitor_id}
+                  className={`${getRowColorClass(visitor.visitor_needs)} border-b`}
+                >
                   {/* <td className="px-2 py-3 text-center">
                     <img
                       src={`http://127.0.0.1:8000/storage/${visitor.visitor_img}`}
@@ -126,20 +129,18 @@ const CheckOutPage: React.FC = () => {
                   <td className="px-2 py-3 text-center text-sm">{visitor.visitor_id}</td>
                   <td className="px-2 py-3 text-center text-sm">{visitor.visitor_name}</td>
                   <td className="px-2 py-3 text-center text-sm">{visitor.visitor_from}</td>
-                  {/* Updated code starts here */}
-                  <td className="px-2 py-3 text-center text-sm">
-                    <span className={getVisitorNeedsClass(visitor.visitor_needs)}>
-                      {visitor.visitor_needs}
-                    </span>
-                  </td>
-                  {/* Updated code ends here */}
+                  <td className="px-2 py-3 text-center text-sm">{visitor.visitor_needs}</td>
                   <td className="px-2 py-3 text-center text-sm">
                     {!visitor.visitor_checkout && (
                       <div className="flex justify-center space-x-4">
                         {/* <button onClick={() => handlePrint(visitor.visitor_id)} aria-label="Print" className="focus:outline-none">
                           <img src="/icon_printer.svg" alt="Print" className="w-5 h-5" />
                         </button> */}
-                        <button onClick={() => handleCheckOut(visitor.visitor_id)} aria-label="Check-out" className="focus:outline-none">
+                        <button
+                          onClick={() => handleCheckOut(visitor.visitor_id)}
+                          aria-label="Check-out"
+                          className="focus:outline-none"
+                        >
                           <img src="/icon_logout.svg" alt="Check-out" className="w-5 h-5" />
                         </button>
                       </div>
@@ -149,7 +150,7 @@ const CheckOutPage: React.FC = () => {
               ))
             ) : (
               <tr>
-                <td colSpan={11} className="text-center py-4">
+                <td colSpan={5} className="text-center py-4">
                   No visitors available for today.
                 </td>
               </tr>
