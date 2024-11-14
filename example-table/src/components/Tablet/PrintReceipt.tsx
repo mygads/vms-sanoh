@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { getVisitorPrintData, Visitor } from '../../services/apiService';
-import { Document, Page, Text, View, Image, StyleSheet, PDFViewer, pdf } from '@react-pdf/renderer';
+import { Document, Page, Text, View, Image, StyleSheet, pdf } from '@react-pdf/renderer';
 import QRCode from 'qrcode';
 import logoSanoh from '/logo-sanoh.png'; // Adjust the path as needed
 
@@ -82,9 +82,10 @@ const styles = StyleSheet.create({
 
 const PrintReceipt: React.FC = () => {
   const { visitorId } = useParams<{ visitorId: string }>();
+  const navigate = useNavigate();
   const [visitorData, setVisitorData] = useState<Visitor | null>(null);
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
-  const [isPrinting, setIsPrinting] = useState(false);
+  const [isPrinting, setIsPrinting] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchVisitorData = async () => {
@@ -111,22 +112,25 @@ const PrintReceipt: React.FC = () => {
         setIsPrinting(true);
         const blob = await pdf(<MyDocument />).toBlob();
         const url = URL.createObjectURL(blob);
-        const printWindow = window.open(url);
-        if (printWindow) {
-          printWindow.addEventListener('load', () => {
-            printWindow.print();
-            printWindow.onafterprint = () => {
-              printWindow.close();
-            };
-          });
-        }
+
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = url;
+        document.body.appendChild(iframe);
+
+        iframe.onload = () => {
+          iframe.contentWindow?.print();
+          setTimeout(() => {
+            document.body.removeChild(iframe);
+            setIsPrinting(false);
+            navigate('/tablet'); // Redirect to /tablet after printing
+          }, 1000);
+        };
       }
     };
 
     printDocument();
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [visitorData, qrCodeDataUrl]);
+  }, [visitorData, qrCodeDataUrl, isPrinting, navigate]);
 
   if (!visitorData || !qrCodeDataUrl) {
     return <div>Loading...</div>;
@@ -144,28 +148,25 @@ const PrintReceipt: React.FC = () => {
         </View>
 
         {/* Visitor ID */}
-        <Text style={styles.visitorId}>{visitorData.visitor_id}</Text>
+        <Text style={styles.visitorId}>{visitorData!.visitor_id}</Text>
 
         {/* Visitor Information */}
         <View style={styles.infoContainer}>
           <Text style={styles.infoText}>
-            <Text style={styles.boldText}>Tanggal Masuk:</Text> {visitorData.visitor_checkin}
+            <Text style={styles.boldText}>Nama:</Text> {visitorData!.visitor_name}
           </Text>
           <Text style={styles.infoText}>
-            <Text style={styles.boldText}>Nama Tamu:</Text> {visitorData.visitor_name}
+            <Text style={styles.boldText}>Asal Perusahaan:</Text> {visitorData!.visitor_from}
           </Text>
           <Text style={styles.infoText}>
-            <Text style={styles.boldText}>Asal Perusahaan:</Text> {visitorData.visitor_from}
+            <Text style={styles.boldText}>Host:</Text> {visitorData!.visitor_host} -{' '}
+            {visitorData!.department}
           </Text>
           <Text style={styles.infoText}>
-            <Text style={styles.boldText}>Host:</Text> {visitorData.visitor_host} -{' '}
-            {visitorData.department}
+            <Text style={styles.boldText}>Keperluan:</Text> {visitorData!.visitor_needs}
           </Text>
           <Text style={styles.infoText}>
-            <Text style={styles.boldText}>Keperluan:</Text> {visitorData.visitor_needs}
-          </Text>
-          <Text style={styles.infoText}>
-            <Text style={styles.boldText}>Jumlah Tamu:</Text> {visitorData.visitor_amount}
+            <Text style={styles.boldText}>Jumlah Tamu:</Text> {visitorData!.visitor_amount}
           </Text>
         </View>
 
@@ -210,11 +211,8 @@ const PrintReceipt: React.FC = () => {
       </Page>
     </Document>
   );
-  return (
-    <PDFViewer width="100%" height="1000">
-      <MyDocument />
-    </PDFViewer>
-  );
+
+  return null;
 };
 
 export default PrintReceipt;

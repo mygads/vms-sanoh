@@ -42,7 +42,9 @@ export const submitVisitorData = async (
 ): Promise<string> => {
   try {
     const response = await axios.post(`${apiBaseUrl}/create`, visitor);
-    return response.data.visitor_id; // Return the visitor ID
+    // Access the visitor ID from response.data.data.visitor_id
+    console.log('Visitor ID:', response.data.data.visitor_id); 
+    return response.data.data.visitor_id;
   } catch (error) {
     console.error('Error submitting visitor data:', error);
     throw error;
@@ -70,8 +72,8 @@ export const allVisitor = async (): Promise<Visitor[]> => {
 
 export const getVisitorPrintData = async (visitorId: string): Promise<Visitor> => {
   try {
-    const response = await axios.get<Visitor>(`${apiBaseUrl}/print/${visitorId}`);
-    return response.data;
+    const response = await axios.get(`${apiBaseUrl}/print/${visitorId}`);
+    return response.data; // Adjust based on your API's response structure
   } catch (error) {
     console.error('Error fetching visitor print data:', error);
     throw error;

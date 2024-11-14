@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { submitVisitorData, fetchEmployeeData, Employee } from '../../services/apiService';
 
 interface VisitorData {
+  visitor_id? : string;
   visitor_date: string;
   visitor_name: string;
   visitor_from: string;
@@ -96,11 +97,11 @@ const CheckInForm: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const visitorData = { ...formData, department: formData.department || '' };
-
+  
     try {
-      const visitorId = await submitVisitorData(visitorData); // Get the visitor ID
-      console.log('Data submitted successfully');
-      navigate(`/print/${visitorId}`); // Navigate to the PrintReceipt component
+      const visitorId = await submitVisitorData(visitorData);
+      console.log('Data submitted successfully, visitor ID:', visitorId);
+      navigate(`/tablet/print/${visitorId}`);
     } catch (error) {
       console.error('Error submitting data:', error);
     }
