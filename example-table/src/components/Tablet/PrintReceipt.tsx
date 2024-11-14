@@ -1,103 +1,219 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getVisitorPrintData, Visitor } from '../../services/apiService';
-import logoSanoh from '/logo-sanoh.png';
+import { Document, Page, Text, View, Image, StyleSheet, PDFViewer, pdf } from '@react-pdf/renderer';
+import QRCode from 'qrcode';
+import logoSanoh from '/logo-sanoh.png'; // Adjust the path as needed
+
+const styles = StyleSheet.create({
+  page: {
+    width: '3in',
+    height: '6in',
+    padding: 10,
+    backgroundColor: '#FFFFFF',
+    border: '2px solid #D1D5DB',
+  },
+  logo: {
+    width: 72, // Approximate 'w-24' size
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
+  qrCode: {
+    alignSelf: 'center',
+    marginBottom: 5,
+  },
+  visitorId: {
+    textAlign: 'center',
+    color: '#1F2937',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  infoContainer: {
+    marginBottom: 5,
+  },
+  infoText: {
+    fontSize: 10,
+    color: '#374151',
+    marginBottom: 8,
+  },
+  boldText: {
+    fontWeight: 'bold',
+  },
+  signatureSection: {
+    marginTop: 10,
+  },
+  signatureTitle: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#374151',
+    marginBottom: 5,
+  },
+  signatureContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  signatureBox: {
+    width: '30%',
+    alignItems: 'center',
+  },
+  signatureLabel: {
+    fontSize: 8,
+    color: '#6B7280',
+    marginBottom: 20,
+  },
+  signatureLine: {
+    borderTopWidth: 1,
+    borderTopColor: '#4B5563',
+    width: '100%',
+    marginTop: 'auto',
+  },
+  notice: {
+    textAlign: 'center',
+    fontSize: 8,
+    color: '#374151',
+    marginTop: 10,
+  },
+  italicText: {
+    fontStyle: 'italic',
+  },
+});
 
 const PrintReceipt: React.FC = () => {
   const { visitorId } = useParams<{ visitorId: string }>();
   const [visitorData, setVisitorData] = useState<Visitor | null>(null);
+  const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
+  const [isPrinting, setIsPrinting] = useState(false);
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchVisitorData = async () => {
       if (visitorId) {
         try {
           const data = await getVisitorPrintData(visitorId);
           setVisitorData(data);
+
+          // Generate QR code data URL
+          const qrCodeUrl = await QRCode.toDataURL(visitorId, { margin: 0 });
+          setQrCodeDataUrl(qrCodeUrl);
         } catch (error) {
           console.error('Error fetching visitor data:', error);
         }
       }
     };
 
-    fetchData();
+    fetchVisitorData();
   }, [visitorId]);
 
-  if (!visitorData) {
+  useEffect(() => {
+    const printDocument = async () => {
+      if (visitorData && qrCodeDataUrl && !isPrinting) {
+        setIsPrinting(true);
+        const blob = await pdf(<MyDocument />).toBlob();
+        const url = URL.createObjectURL(blob);
+        const printWindow = window.open(url);
+        if (printWindow) {
+          printWindow.addEventListener('load', () => {
+            printWindow.print();
+            printWindow.onafterprint = () => {
+              printWindow.close();
+            };
+          });
+        }
+      }
+    };
+
+    printDocument();
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [visitorData, qrCodeDataUrl]);
+
+  if (!visitorData || !qrCodeDataUrl) {
     return <div>Loading...</div>;
   }
 
-  return (
-    <div className="flex items-center justify-center h-screen">
-      <div
-        className="relative bg-white shadow-xl rounded-lg p-8 max-w-xs overflow-hidden border border-gray-200"
-        style={{ width: '3in', height: '6in' }}
-      >
-        {/* Small Logo in Top-Left */}
-        <div className="absolute" style={{ top: '20px', left: '20px' }}>
-          <img src={logoSanoh} alt="Sanoh Logo" className="w-10 h-auto opacity-80" />
-        </div>
-
-        {/* Access Text */}
-        <p className="text-center text-gray-700 text-sm mb-1 mt-6">Akses masuk</p>
+  const MyDocument = () => (
+    <Document>
+      <Page size={{ width: 216, height: 432 }} style={styles.page}>
+        {/* Logo */}
+        <Image src={logoSanoh} style={styles.logo} />
 
         {/* QR Code */}
-        {/* Update this part if you have a QR code URL in visitorData */}
-        {/* <div className="relative z-10 flex justify-center mb-3">
-          <img src={visitorData.visitor_qr_code} alt="QR Code" className="w-20 h-auto" />
-        </div> */}
+        <View style={styles.qrCode}>
+          <Image src={qrCodeDataUrl} style={{ width: 80, height: 80 }} />
+        </View>
 
-        {/* Visitor Number */}
-        <p className="text-center text-gray-800 text-2xl font-bold mb-8">
-          {visitorData.visitor_id}
-        </p>
+        {/* Visitor ID */}
+        <Text style={styles.visitorId}>{visitorData.visitor_id}</Text>
 
         {/* Visitor Information */}
-        <div className="relative z-10 text-left space-y-2 mb-12">
-          <p className="font-semibold text-sm text-gray-700">
-            Nama: <span className="font-normal">{visitorData.visitor_name}</span>
-          </p>
-          <p className="font-semibold text-sm text-gray-700">
-            Perusahaan:{' '}
-            <span className="font-normal">{visitorData.visitor_from}</span>
-          </p>
-          <p className="font-semibold text-sm text-gray-700">
-            Host:{' '}
-            <span className="font-normal">
-              {visitorData.visitor_host} - {visitorData.department}
-            </span>
-          </p>
-          <p className="font-semibold text-sm text-gray-700">
-            Keperluan:{' '}
-            <span className="font-normal">{visitorData.visitor_needs}</span>
-          </p>
-          <p className="font-semibold text-sm text-gray-700">
-            Jumlah Tamu:{' '}
-            <span className="font-normal">{visitorData.visitor_amount}</span>
-          </p>
-        </div>
+        <View style={styles.infoContainer}>
+          <Text style={styles.infoText}>
+            <Text style={styles.boldText}>Tanggal Masuk:</Text> {visitorData.visitor_checkin}
+          </Text>
+          <Text style={styles.infoText}>
+            <Text style={styles.boldText}>Nama Tamu:</Text> {visitorData.visitor_name}
+          </Text>
+          <Text style={styles.infoText}>
+            <Text style={styles.boldText}>Asal Perusahaan:</Text> {visitorData.visitor_from}
+          </Text>
+          <Text style={styles.infoText}>
+            <Text style={styles.boldText}>Host:</Text> {visitorData.visitor_host} -{' '}
+            {visitorData.department}
+          </Text>
+          <Text style={styles.infoText}>
+            <Text style={styles.boldText}>Keperluan:</Text> {visitorData.visitor_needs}
+          </Text>
+          <Text style={styles.infoText}>
+            <Text style={styles.boldText}>Jumlah Tamu:</Text> {visitorData.visitor_amount}
+          </Text>
+        </View>
 
         {/* Signature Section */}
-        <div className="relative z-10">
-          <p className="font-semibold text-center mb-4 text-gray-700">
-            Tanda Tangan
-          </p>
-          <div className="flex justify-between mt-2 space-x-2">
-            <div className="text-center w-24">
-              <div className="mb-2 text-sm text-gray-600">Security</div>
-              <div className="border-b border-gray-600 w-full mx-auto mt-10"></div>
-            </div>
-            <div className="text-center w-24">
-              <div className="mb-2 text-sm text-gray-600">Visitor</div>
-              <div className="border-b border-gray-600 w-full mx-auto mt-10"></div>
-            </div>
-            <div className="text-center w-24">
-              <div className="mb-2 text-sm text-gray-600">Host</div>
-              <div className="border-b border-gray-600 w-full mx-auto mt-10"></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+        <View style={styles.signatureSection}>
+          <Text style={styles.signatureTitle}>TANDA TANGAN</Text>
+          <View style={styles.signatureContainer}>
+            <View style={styles.signatureBox}>
+              <Text style={styles.signatureLabel}>Visitor</Text>
+              <View style={styles.signatureLine}></View>
+            </View>
+            <View style={styles.signatureBox}>
+              <Text style={styles.signatureLabel}>Host</Text>
+              <View style={styles.signatureLine}></View>
+            </View>
+            <View style={styles.signatureBox}>
+              <Text style={styles.signatureLabel}>Security</Text>
+              <View style={styles.signatureLine}></View>
+            </View>
+          </View>
+        </View>
+
+        {/* Notice */}
+        <Text style={styles.notice}>
+          <Text style={styles.boldText}>
+            Dilarang mengambil gambar atau foto di area perusahaan tanpa izin
+          </Text>
+          {'\n'}
+          <Text style={styles.italicText}>
+            (Taking pictures or photos in the company area without permission is prohibited)
+          </Text>
+        </Text>
+
+        {/* Note */}
+        <Text style={styles.notice}>
+          <Text style={styles.boldText}>NOTE: Form harus kembali ke pos security</Text>
+          {'\n'}
+          <Text style={styles.italicText}>
+            (Please return this form to security post)
+          </Text>
+        </Text>
+      </Page>
+    </Document>
+  );
+  return (
+    <PDFViewer width="100%" height="1000">
+      <MyDocument />
+    </PDFViewer>
   );
 };
 

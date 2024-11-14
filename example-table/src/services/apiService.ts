@@ -39,9 +39,10 @@ export const fetchVisitorData = async (): Promise<Visitor[]> => {
 
 export const submitVisitorData = async (
   visitor: Omit<Visitor, 'visitor_id' | 'visitor_checkin' | 'visitor_checkout'>
-): Promise<void> => {
+): Promise<string> => {
   try {
-    await axios.post(`${apiBaseUrl}/create`, visitor);
+    const response = await axios.post(`${apiBaseUrl}/create`, visitor);
+    return response.data.visitor_id; // Return the visitor ID
   } catch (error) {
     console.error('Error submitting visitor data:', error);
     throw error;

@@ -98,9 +98,9 @@ const CheckInForm: React.FC = () => {
     const visitorData = { ...formData, department: formData.department || '' };
 
     try {
-      await submitVisitorData(visitorData);
+      const visitorId = await submitVisitorData(visitorData); // Get the visitor ID
       console.log('Data submitted successfully');
-      navigate('/tablet');
+      navigate(`/print/${visitorId}`); // Navigate to the PrintReceipt component
     } catch (error) {
       console.error('Error submitting data:', error);
     }

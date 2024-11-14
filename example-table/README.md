@@ -51,3 +51,9 @@ export default tseslint.config({
 ## For hide something that didnt needed on print using html2pdf.js
 
 data-html2canvas-ignore
+
+npm install react-qr-code
+
+npm install @react-pdf/renderer qrcode
+
+npm i --save-dev @types/qrcode
