@@ -1,6 +1,6 @@
 // App.tsx
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Login from './components/Login';
 import Tablet from './components/Tablet/Tablet';
 import CheckInForm from './components/Tablet/CheckInForm';
