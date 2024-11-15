@@ -38,7 +38,7 @@ const DefaultLayout: React.FC = () => {
         </header>
 
         {/* Main content area where the routed pages will be displayed */}
-        <main className="mx-auto max-w-screen-2xl p-4 md:p-6 2xl:p-10">
+        <main className="p-4 md:p-6 2xl:p-10">
           <Outlet />
         </main>
       </div>

@@ -120,11 +120,15 @@ const Admin: React.FC = () => {
           </p>
         </div>
 
+        <div className="p-4 flex-1 text-center"></div>
+
         {/* Date Card */}
         <div className="bg-white shadow-lg rounded-lg p-4 flex-1 text-center">
           <h2 className="text-2xl font-semibold">Tanggal hari ini</h2>
           <p className="text-xl mt-2 text-gray-600">{currentDate}</p>
         </div>
+
+        <div className="p-4 flex-1 text-center"></div>
 
         {/* Time Card */}
         <div className="bg-white shadow-lg rounded-lg p-4 flex-1 text-center">
