@@ -11,7 +11,7 @@ const styles = StyleSheet.create({
     height: '6.30in',
     padding: 3,
     backgroundColor: '#FFFFFF',
-    marginRight: '5mm',
+    marginRight: '8mm',
     // border: '2px solid #D1D5DB',
   },
   logo: {
@@ -33,13 +33,23 @@ const styles = StyleSheet.create({
   infoContainer: {
     marginBottom: 5,
   },
-  infoText: {
-    fontSize: 10,
-    color: '#374151',
-    marginBottom: 8,
+  infoRow: {
+    flexDirection: 'row',
+    marginBottom: 4,
   },
   boldText: {
     fontWeight: 'bold',
+  },
+  label: {
+    fontSize: 10,
+    color: '#374151',
+    fontWeight: 'bold',
+    width: '40%',
+  },
+  value: {
+    fontSize: 10,
+    color: '#374151',
+    width: '60%',
   },
   signatureSection: {
     marginTop: 10,
@@ -60,9 +70,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   signatureLabel: {
+    alignItems: 'center',
     fontSize: 8,
     color: '#6B7280',
-    marginBottom: 20,
+    marginBottom: 25,
   },
   signatureLine: {
     borderTopWidth: 1,
@@ -153,25 +164,36 @@ const PrintReceipt: React.FC = () => {
 
         {/* Visitor Information */}
         <View style={styles.infoContainer}>
-        <Text style={styles.infoText}>
-            <Text style={styles.boldText}>Tanggal Masuk:</Text> {visitorData!.visitor_checkin}
-          </Text>
-          <Text style={styles.infoText}>
-            <Text style={styles.boldText}>Nama:</Text> {visitorData!.visitor_name}
-          </Text>
-          <Text style={styles.infoText}>
-            <Text style={styles.boldText}>Asal Perusahaan:</Text> {visitorData!.visitor_from}
-          </Text>
-          <Text style={styles.infoText}>
-            <Text style={styles.boldText}>Host:</Text> {visitorData!.visitor_host} -{' '}
-            {visitorData!.department}
-          </Text>
-          <Text style={styles.infoText}>
-            <Text style={styles.boldText}>Keperluan:</Text> {visitorData!.visitor_needs}
-          </Text>
-          <Text style={styles.infoText}>
-            <Text style={styles.boldText}>Jumlah Tamu:</Text> {visitorData!.visitor_amount}
-          </Text>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>Tanggal Masuk</Text>
+            <Text style={styles.value}>: {visitorData!.visitor_checkin}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>Nama Tamu</Text>
+            <Text style={styles.value}>: {visitorData!.visitor_name}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>Nama Perusahaan</Text>
+            <Text style={styles.value}>: {visitorData!.visitor_from}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>Bertemu</Text>
+            <Text style={styles.value}>
+              : {visitorData!.visitor_host} - {visitorData!.department}
+            </Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>Tujuan</Text>
+            <Text style={styles.value}>: {visitorData!.visitor_needs}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>Jumlah Tamu</Text>
+            <Text style={styles.value}>: {visitorData!.visitor_amount}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>No Kendaraan</Text>
+            <Text style={styles.value}>: {visitorData!.visitor_vehicle}</Text>
+          </View>
         </View>
 
         {/* Signature Section */}
@@ -183,7 +205,7 @@ const PrintReceipt: React.FC = () => {
               <View style={styles.signatureLine}></View>
             </View>
             <View style={styles.signatureBox}>
-              <Text style={styles.signatureLabel}>Host</Text>
+              <Text style={styles.signatureLabel}>Bertemu</Text>
               <View style={styles.signatureLine}></View>
             </View>
             <View style={styles.signatureBox}>
