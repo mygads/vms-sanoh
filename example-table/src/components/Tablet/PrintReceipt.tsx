@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   page: {
     width: '3.15in',
     height: '6.30in',
-    padding: 5,
+    padding: 3,
     backgroundColor: '#FFFFFF',
     // border: '2px solid #D1D5DB',
   },
@@ -144,7 +144,7 @@ const PrintReceipt: React.FC = () => {
 
         {/* QR Code */}
         <View style={styles.qrCode}>
-          <Image src={qrCodeDataUrl} style={{ width: 80, height: 80 }} />
+          <Image src={qrCodeDataUrl} style={{ width: 60, height: 60 }} />
         </View>
 
         {/* Visitor ID */}

@@ -20,7 +20,7 @@ const Admin: React.FC = () => {
   const [currentTime, setCurrentTime] = useState<string>('');
   const [currentVisitors, setCurrentVisitors] = useState<Visitor[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 8;
 
   // Data Fetching useEffect
   useEffect(() => {

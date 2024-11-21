@@ -8,7 +8,7 @@ const CheckOutPage: React.FC = () => {
   const [filter, setFilter] = useState<string>('All');
   const [showFilterButton, setShowFilterButton] = useState<boolean>(false);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const itemsPerPage = 5;
+  const itemsPerPage = 8;
   const navigate = useNavigate();
 
   const getData = async () => {

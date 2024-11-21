@@ -28,7 +28,7 @@ const VisitorLog: React.FC = () => {
     const today = new Date().toISOString().split('T')[0];
     return today;
   });
-  const itemsPerPage = 5;
+  const itemsPerPage = 8;
 
   const getData = async (startDate: string, endDate: string) => {
     try {
