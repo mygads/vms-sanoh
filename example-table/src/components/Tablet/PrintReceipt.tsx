@@ -153,6 +153,9 @@ const PrintReceipt: React.FC = () => {
 
         {/* Visitor Information */}
         <View style={styles.infoContainer}>
+        <Text style={styles.infoText}>
+            <Text style={styles.boldText}>Tanggal Masuk:</Text> {visitorData!.visitor_checkin}
+          </Text>
           <Text style={styles.infoText}>
             <Text style={styles.boldText}>Nama:</Text> {visitorData!.visitor_name}
           </Text>
