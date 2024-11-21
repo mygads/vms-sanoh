@@ -11,6 +11,7 @@ const styles = StyleSheet.create({
     height: '6.30in',
     padding: 3,
     backgroundColor: '#FFFFFF',
+    marginRight: '5mm',
     // border: '2px solid #D1D5DB',
   },
   logo: {
