@@ -9,7 +9,7 @@ const styles = StyleSheet.create({
   page: {
     width: '3.15in',
     height: '6.3in',
-    // padding: 10,
+    padding: 3,
     backgroundColor: '#FFFFFF',
     // border: '2px solid #D1D5DB',
   },
@@ -124,7 +124,7 @@ const PrintReceipt: React.FC = () => {
             document.body.removeChild(iframe);
             setIsPrinting(false);
             navigate('/tablet'); // Redirect to /tablet after printing
-          }, 10000);
+          }, 1000);
         };
       }
     };
