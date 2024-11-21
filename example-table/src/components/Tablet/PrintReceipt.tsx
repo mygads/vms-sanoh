@@ -113,25 +113,35 @@ const PrintReceipt: React.FC = () => {
         const blob = await pdf(<MyDocument />).toBlob();
         const url = URL.createObjectURL(blob);
 
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.src = url;
-        document.body.appendChild(iframe);
+        const printWindow = window.open(url);
 
-        iframe.onload = () => {
-          iframe.contentWindow?.print();
-          setTimeout(() => {
-            document.body.removeChild(iframe);
-            setIsPrinting(false);
-            navigate('/tablet'); // Redirect to /tablet after printing
-          }, 1000);
-        };
+        if (printWindow) {
+          printWindow.focus();
+
+          // Check if the print window is closed and navigate back to /tablet
+          const checkWindowClosed = setInterval(() => {
+            if (printWindow.closed) {
+              clearInterval(checkWindowClosed);
+              navigate('/tablet');
+            }
+          }, 500);
+
+          printWindow.addEventListener('load', () => {
+            printWindow.print();
+            printWindow.onafterprint = () => {
+              printWindow.close();
+            };
+          });
+        } else {
+          alert('Please allow pop-ups for this website.');
+          setIsPrinting(false);
+        }
       }
     };
 
     printDocument();
   }, [visitorData, qrCodeDataUrl, isPrinting, navigate]);
-
+  
   if (!visitorData || !qrCodeDataUrl) {
     return <div>Loading...</div>;
   }
