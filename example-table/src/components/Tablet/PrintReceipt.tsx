@@ -7,7 +7,7 @@ import logoSanoh from '/logo-sanoh.png'; // Adjust the path as needed
 
 const styles = StyleSheet.create({
   page: {
-    width: '3.15in',
+    width: '2.80in',
     height: '6.30in',
     padding: 3,
     backgroundColor: '#FFFFFF',
@@ -83,7 +83,7 @@ const styles = StyleSheet.create({
   },
   notice: {
     textAlign: 'center',
-    fontSize: 6,
+    fontSize: 8,
     color: '#374151',
     marginTop: 10,
   },
