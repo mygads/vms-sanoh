@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     fontSize: 8,
     color: '#6B7280',
-    marginBottom: 25,
+    marginBottom: 40,
   },
   signatureLine: {
     borderTopWidth: 1,
@@ -205,7 +205,7 @@ const PrintReceipt: React.FC = () => {
               <View style={styles.signatureLine}></View>
             </View>
             <View style={styles.signatureBox}>
-              <Text style={styles.signatureLabel}>Bertemu</Text>
+              <Text style={styles.signatureLabel}>Penerima Tamu</Text>
               <View style={styles.signatureLine}></View>
             </View>
             <View style={styles.signatureBox}>
