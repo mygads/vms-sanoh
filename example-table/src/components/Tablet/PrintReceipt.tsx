@@ -1,96 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getVisitorPrintData, Visitor } from '../../services/apiService';
-import { Document, Page, Text, View, Image, StyleSheet, pdf } from '@react-pdf/renderer';
+import { renderToString } from 'react-dom/server';
 import QRCode from 'qrcode';
-import logoSanoh from '/logo-sanoh.png'; // Adjust the path as needed
 
-const styles = StyleSheet.create({
-  page: {
-    width: '3.15in',
-    height: '6.30in',
-    padding: 3,
-    backgroundColor: '#FFFFFF',
-    marginRight: '12mm',
-    // border: '2px solid #D1D5DB',
-  },
-  logo: {
-    width: 72, // Approximate 'w-24' size
-    alignSelf: 'center',
-    marginBottom: 10,
-  },
-  qrCode: {
-    alignSelf: 'center',
-    marginBottom: 5,
-  },
-  visitorId: {
-    textAlign: 'center',
-    color: '#1F2937',
-    fontSize: 20,
-    fontWeight: 'bold',
-    marginBottom: 5,
-  },
-  infoContainer: {
-    marginBottom: 5,
-  },
-  infoRow: {
-    flexDirection: 'row',
-    marginBottom: 4,
-  },
-  boldText: {
-    fontWeight: 'bold',
-  },
-  label: {
-    fontSize: 10,
-    color: '#374151',
-    fontWeight: 'bold',
-    width: '40%',
-  },
-  value: {
-    fontSize: 10,
-    color: '#374151',
-    width: '60%',
-  },
-  signatureSection: {
-    marginTop: 10,
-  },
-  signatureTitle: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    textAlign: 'center',
-    color: '#374151',
-    marginBottom: 5,
-  },
-  signatureContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  signatureBox: {
-    width: '30%',
-    alignItems: 'center',
-  },
-  signatureLabel: {
-    alignItems: 'center',
-    fontSize: 8,
-    color: '#6B7280',
-    marginBottom: 40,
-  },
-  signatureLine: {
-    borderTopWidth: 1,
-    borderTopColor: '#4B5563',
-    width: '100%',
-    marginTop: 'auto',
-  },
-  notice: {
-    textAlign: 'center',
-    fontSize: 8,
-    color: '#374151',
-    marginTop: 10,
-  },
-  italicText: {
-    fontStyle: 'italic',
-  },
-});
+// Import styles if using CSS modules or adjust accordingly
+import logoSanoh from '/logo-sanoh.png'; // Adjust the path as needed
 
 const PrintReceipt: React.FC = () => {
   const { visitorId } = useParams<{ visitorId: string }>();
@@ -119,126 +34,168 @@ const PrintReceipt: React.FC = () => {
   }, [visitorId]);
 
   useEffect(() => {
-    const printDocument = async () => {
+    const printWithQZTray = async () => {
       if (visitorData && qrCodeDataUrl && !isPrinting) {
         setIsPrinting(true);
-        const blob = await pdf(<MyDocument />).toBlob();
-        const url = URL.createObjectURL(blob);
 
-        const iframe = document.createElement('iframe');
-        iframe.style.display = 'none';
-        iframe.src = url;
-        document.body.appendChild(iframe);
+        // Initialize QZ Tray
+        const qz = (window as any).qz;
 
-        iframe.onload = () => {
-          iframe.contentWindow?.print();
-          setTimeout(() => {
-            document.body.removeChild(iframe);
-            setIsPrinting(false);
-            navigate('/tablet'); // Redirect to /tablet after printing
-          }, 5000);
-        };
+        if (!qz) {
+          alert('QZ Tray is not loaded. Please ensure qz-tray.js is included.');
+          setIsPrinting(false);
+          return;
+        }
+
+        qz.api.setPromiseType(window.Promise);
+
+        // For secure printing, you may need to set up certificate and signature
+        qz.security.setCertificatePromise(function (resolve: any) {
+          // Resolve with your certificate information
+          resolve();
+        });
+
+        qz.security.setSignaturePromise(function () {
+          return function (resolve: any) {
+            // Sign the toSign data and resolve
+            resolve();
+          };
+        });
+
+        // Connect to QZ Tray
+        try {
+          await qz.websocket.connect();
+        } catch (err) {
+          console.error('Failed to connect to QZ Tray:', err);
+          setIsPrinting(false);
+          return;
+        }
+
+        // Find the printer
+        let printer;
+        try {
+          printer = await qz.printers.find("Iware IW-J200BT"); // Adjust with your printer's name
+        } catch (err) {
+          console.error('Printer not found:', err);
+          alert('Printer not found. Please ensure it is connected and paired.');
+          setIsPrinting(false);
+          return;
+        }
+
+        // Prepare print data
+        const config = qz.configs.create(printer, {
+          encoding: 'GB18030', // Adjust encoding if necessary
+          /* Additional printer configurations can go here */
+        });
+
+        // Generate the receipt content as HTML string
+        const receiptHtml = renderReceiptHtml(visitorData, qrCodeDataUrl);
+
+        // Prepare the print data
+        const data = [
+          {
+            type: 'html',
+            format: 'plain',
+            data: receiptHtml,
+          },
+        ];
+
+        // Send the print job
+        try {
+          await qz.print(config, data);
+          console.log('Print job submitted successfully');
+        } catch (err) {
+          console.error('Failed to print:', err);
+          alert('Failed to print: ' + err);
+        } finally {
+          // Disconnect from QZ Tray
+          await qz.websocket.disconnect();
+          setIsPrinting(false);
+          navigate('/tablet'); // Redirect after printing
+        }
       }
     };
 
-    printDocument();
+    printWithQZTray();
   }, [visitorData, qrCodeDataUrl, isPrinting, navigate]);
 
   if (!visitorData || !qrCodeDataUrl) {
     return <div>Loading...</div>;
   }
 
-  const MyDocument = () => (
-    <Document>
-      <Page size={{ width: 216, height: 432 }} style={styles.page}>
+  // Function to generate the receipt HTML content
+  const renderReceiptHtml = (visitor: Visitor, qrCodeUrl: string) => {
+    return renderToString(
+      <div style={{ width: '2.8in', fontFamily: 'Arial, sans-serif', fontSize: '10px' }}>
         {/* Logo */}
-        <Image src={logoSanoh} style={styles.logo} />
+        <div style={{ textAlign: 'center' }}>
+          <img src={logoSanoh} alt="Logo" style={{ width: '72px', marginBottom: '10px' }} />
+        </div>
 
         {/* QR Code */}
-        <View style={styles.qrCode}>
-          <Image src={qrCodeDataUrl} style={{ width: 60, height: 60 }} />
-        </View>
+        <div style={{ textAlign: 'center', marginBottom: '5px' }}>
+          <img src={qrCodeUrl} alt="QR Code" style={{ width: '60px', height: '60px' }} />
+        </div>
 
         {/* Visitor ID */}
-        <Text style={styles.visitorId}>{visitorData!.visitor_id}</Text>
+        <div style={{ textAlign: 'center', color: '#1F2937', fontSize: '20px', fontWeight: 'bold', marginBottom: '5px' }}>
+          {visitor.visitor_id}
+        </div>
 
         {/* Visitor Information */}
-        <View style={styles.infoContainer}>
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>Tanggal Masuk</Text>
-            <Text style={styles.value}>: {visitorData!.visitor_checkin}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>Nama Tamu</Text>
-            <Text style={styles.value}>: {visitorData!.visitor_name}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>Nama Perusahaan</Text>
-            <Text style={styles.value}>: {visitorData!.visitor_from}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>Bertemu</Text>
-            <Text style={styles.value}>
-              : {visitorData!.visitor_host} - {visitorData!.department}
-            </Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>Tujuan</Text>
-            <Text style={styles.value}>: {visitorData!.visitor_needs}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>Jumlah Tamu</Text>
-            <Text style={styles.value}>: {visitorData!.visitor_amount}</Text>
-          </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.label}>No Kendaraan</Text>
-            <Text style={styles.value}>: {visitorData!.visitor_vehicle}</Text>
-          </View>
-        </View>
+        <div style={{ marginBottom: '5px' }}>
+          <div><strong>Tanggal Masuk:</strong> {visitor.visitor_checkin}</div>
+          <div><strong>Nama Tamu:</strong> {visitor.visitor_name}</div>
+          <div><strong>Nama Perusahaan:</strong> {visitor.visitor_from}</div>
+          <div><strong>Bertemu:</strong> {visitor.visitor_host} - {visitor.department}</div>
+          <div><strong>Tujuan:</strong> {visitor.visitor_needs}</div>
+          <div><strong>Jumlah Tamu:</strong> {visitor.visitor_amount}</div>
+          <div><strong>No Kendaraan:</strong> {visitor.visitor_vehicle}</div>
+        </div>
 
         {/* Signature Section */}
-        <View style={styles.signatureSection}>
-          <Text style={styles.signatureTitle}>TANDA TANGAN</Text>
-          <View style={styles.signatureContainer}>
-            <View style={styles.signatureBox}>
-              <Text style={styles.signatureLabel}>Visitor</Text>
-              <View style={styles.signatureLine}></View>
-            </View>
-            <View style={styles.signatureBox}>
-              <Text style={styles.signatureLabel}>Penerima Tamu</Text>
-              <View style={styles.signatureLine}></View>
-            </View>
-            <View style={styles.signatureBox}>
-              <Text style={styles.signatureLabel}>Security</Text>
-              <View style={styles.signatureLine}></View>
-            </View>
-          </View>
-        </View>
+        <div style={{ marginTop: '10px' }}>
+          <div style={{ textAlign: 'center', fontWeight: 'bold', marginBottom: '5px' }}>TANDA TANGAN</div>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <div style={{ width: '30%', textAlign: 'center' }}>
+              <div style={{ fontSize: '8px', color: '#6B7280', marginBottom: '40px' }}>Visitor</div>
+              <div style={{ borderTop: '1px solid #4B5563', width: '100%' }}></div>
+            </div>
+            <div style={{ width: '30%', textAlign: 'center' }}>
+              <div style={{ fontSize: '8px', color: '#6B7280', marginBottom: '40px' }}>Penerima Tamu</div>
+              <div style={{ borderTop: '1px solid #4B5563', width: '100%' }}></div>
+            </div>
+            <div style={{ width: '30%', textAlign: 'center' }}>
+              <div style={{ fontSize: '8px', color: '#6B7280', marginBottom: '40px' }}>Security</div>
+              <div style={{ borderTop: '1px solid #4B5563', width: '100%' }}></div>
+            </div>
+          </div>
+        </div>
 
         {/* Notice */}
-        <Text style={styles.notice}>
-          <Text style={styles.boldText}>
+        <div style={{ textAlign: 'center', fontSize: '8px', color: '#374151', marginTop: '10px' }}>
+          <div style={{ fontWeight: 'bold' }}>
             Dilarang mengambil gambar atau foto di area perusahaan tanpa izin
-          </Text>
-          {'\n'}
-          <Text style={styles.italicText}>
+          </div>
+          <div style={{ fontStyle: 'italic' }}>
             (Taking pictures or photos in the company area without permission is prohibited)
-          </Text>
-        </Text>
+          </div>
+        </div>
 
         {/* Note */}
-        <Text style={styles.notice}>
-          <Text style={styles.boldText}>NOTE: Form harus kembali ke pos security</Text>
-          {'\n'}
-          <Text style={styles.italicText}>
+        <div style={{ textAlign: 'center', fontSize: '8px', color: '#374151', marginTop: '5px' }}>
+          <div style={{ fontWeight: 'bold' }}>
+            NOTE: Form harus kembali ke pos security
+          </div>
+          <div style={{ fontStyle: 'italic' }}>
             (Please return this form to security post)
-          </Text>
-        </Text>
-      </Page>
-    </Document>
-  );
+          </div>
+        </div>
+      </div>
+    );
+  };
 
-  return null;
+  return null; // Since the component handles printing, no need to render anything
 };
 
 export default PrintReceipt;
