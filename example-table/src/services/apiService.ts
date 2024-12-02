@@ -30,7 +30,7 @@ export interface Employee {
 export const fetchVisitorData = async (): Promise<Visitor[]> => {
   try {
     const response = await axios.get(`${apiBaseUrl}/visitor`);
-    return response.data.data;
+    return (response.data as { data: Visitor[] }).data;
   } catch (error) {
     console.error('Error fetching visitor data:', error);
     return [];
@@ -43,8 +43,9 @@ export const submitVisitorData = async (
   try {
     const response = await axios.post(`${apiBaseUrl}/create`, visitor);
     // Access the visitor ID from response.data.data.visitor_id
-    console.log('Visitor ID:', response.data.data.visitor_id); 
-    return response.data.data.visitor_id;
+    const responseData = response.data as { data: { visitor_id: string } };
+    console.log('Visitor ID:', responseData.data.visitor_id); 
+    return responseData.data.visitor_id;
   } catch (error) {
     console.error('Error submitting visitor data:', error);
     throw error;
@@ -63,7 +64,8 @@ export const checkOutVisitor = async (visitorId: string): Promise<void> => {
 export const allVisitor = async (): Promise<Visitor[]> => {
   try {
     const response = await axios.get(`${apiBaseUrl}/index`);
-    return response.data.data;
+    const responseData = response.data as { data: Visitor[] };
+    return responseData.data;
   } catch (error) {
     console.error('Error fetching visitor data:', error);
     throw error;
@@ -73,7 +75,7 @@ export const allVisitor = async (): Promise<Visitor[]> => {
 export const getVisitorPrintData = async (visitorId: string): Promise<Visitor> => {
   try {
     const response = await axios.get(`${apiBaseUrl}/print/${visitorId}`);
-    return response.data; // Adjust based on your API's response structure
+    return response.data as Visitor; // Adjust based on your API's response structure
   } catch (error) {
     console.error('Error fetching visitor print data:', error);
     throw error;
@@ -84,7 +86,7 @@ export const getVisitorPrintData = async (visitorId: string): Promise<Visitor> =
 export const fetchEmployeeData = async (): Promise<Employee[]> => {
   try {
     const response = await axios.get(`${apiBaseUrl}/employee`);
-    return response.data.data;
+    return (response.data as { data: Employee[] }).data;
   } catch (error) {
     console.error('Error fetching employee data:', error);
     return [];
@@ -103,7 +105,7 @@ export const submitEmployeeData = async (employee: Employee): Promise<void> => {
 export const editEmployeeData = async (nik: string): Promise<Employee> => {
   try {
     const response = await axios.get(`${apiBaseUrl}/edit/${nik}`);
-    return response.data.data;
+    return (response.data as { data: Employee }).data;
   } catch (error) {
     console.error('Error fetching employee data for editing:', error);
     throw error;
