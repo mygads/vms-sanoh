@@ -114,14 +114,14 @@ const EmployeeLog: React.FC = () => {
             setShowForm(true);
             setFormData({ name: '', email: '', department: '', nik: '', phone_number: '' });
           }}
-          className="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all"
+          className="bg-blue-900 text-white px-4 py-2 rounded mb-4 hover:bg-blue-700 transition-all"
         >
           Add Employee
         </button>
       </div>
 
       {showForm && (
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center w-full">
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center overflow-y-auto">
           <div className="bg-white p-6 rounded shadow-md w-full max-w-lg mx-4 md:mx-0 h-full md:h-auto md:overflow-y-auto">
             <h2 className="text-2xl font-bold mb-3 mt-6 text-center">Add New Employee</h2>
             <form onSubmit={handleFormSubmit}>
@@ -247,7 +247,7 @@ const EmployeeLog: React.FC = () => {
         </div>
       )}
 
-      <div className="relative overflow-x-auto shadow-md rounded-lg border border-gray-200 w-full mt-10">
+      <div className="overflow-x-auto shadow-md rounded-lg border border-gray-200 w-full mt-10">
         <table className="w-full text-sm text-gray-700">
           <thead className="bg-gray-200 text-base text-gray-800 border-gray-200">
             <tr>
