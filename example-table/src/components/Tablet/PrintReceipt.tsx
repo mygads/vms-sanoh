@@ -83,9 +83,23 @@ const PrintReceipt: React.FC = () => {
         }
 
         // Prepare print data
+        // const config = qz.configs.create(printer, {
+        //   encoding: 'UTF-8',
+        //   copies: 1,
+        //   density: 1,
+        //   margins: { top: 0, right: 0, bottom: 0, left: 0 },
+        //   paperSize: { width: '3.15in', height: '6.30in' },
+        //   colorType: 'grayscale', // Print in grayscale
+        //   duplex: false, // Single-sided printing
+        //   jobName: 'Visitor Receipt', // Custom job name
+        // });
+
         const config = qz.configs.create(printer, {
-          encoding: 'GB18030', // Adjust encoding if necessary
-          /* Additional printer configurations can go here */
+          encoding: 'UTF-8', // Adjust encoding if necessary
+          copies: 1, // Number of copies
+          density: 1, // Print density
+          margins: { top: 0, right: 0, bottom: 0, left: 0 }, // Margins
+          paperSize: { width: '3.15in', height: '6.30in' }, // Paper size
         });
 
         // Generate the receipt content as HTML string
@@ -126,7 +140,7 @@ const PrintReceipt: React.FC = () => {
   // Function to generate the receipt HTML content
   const renderReceiptHtml = (visitor: Visitor, qrCodeUrl: string) => {
     return renderToString(
-      <div style={{ width: '2.8in', fontFamily: 'Arial, sans-serif', fontSize: '10px' }}>
+      <div style={{ width: '3.15in', fontFamily: 'Arial, sans-serif', fontSize: '10px' }}>
         {/* Logo */}
         <div style={{ textAlign: 'center' }}>
           <img src={logoSanoh} alt="Logo" style={{ width: '72px', marginBottom: '10px' }} />
