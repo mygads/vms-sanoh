@@ -34,7 +34,7 @@ export const fetchVisitorData = async (): Promise<Visitor[]> => {
   } catch (error) {
     console.error('Error fetching visitor data:', error);
     return [];
-  }
+  } 
 };
 
 export const submitVisitorData = async (

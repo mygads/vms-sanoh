@@ -7,7 +7,7 @@ interface Employee {
   email: string;
   department: string;
   nik: string;
-  phone_number: string;
+  phone_number: string; // Ensure this is the correct property name
 }
 
 const EmployeeLog: React.FC = () => {
@@ -19,7 +19,7 @@ const EmployeeLog: React.FC = () => {
     email: '',
     department: '',
     nik: '',
-    phone_number: '',
+    phone_number: '', // Ensure this is the correct property name
   });
   const [editingEmployeeNik, setEditingEmployeeNik] = useState<string | null>(null);
 
@@ -47,7 +47,7 @@ const EmployeeLog: React.FC = () => {
       email: formData.email,
       department: formData.department,
       nik: formData.nik,
-      phone_number: formData.phone_number,
+      phone_number: formData.phone_number, // Ensure this is the correct property name
     };
     try {
       await submitEmployeeData(newEmployee);
@@ -76,7 +76,7 @@ const EmployeeLog: React.FC = () => {
       email: employee.email,
       department: employee.department,
       nik: employee.nik,
-      phone_number: employee.phone_number,
+      phone_number: employee.phone_number, // Ensure this is the correct property name
     });
   };
 
@@ -86,7 +86,7 @@ const EmployeeLog: React.FC = () => {
       try {
         await updateEmployeeData(editingEmployeeNik, {
           email: formData.email,
-          phone_number: formData.phone_number,
+          phone_number: formData.phone_number, // Ensure this is the correct property name
           department: formData.department,
         });
         setEmployees(
@@ -107,179 +107,178 @@ const EmployeeLog: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4 relative">
-      <div className="container mx-auto p-4">
-        <h2 className="text-2xl font-bold mb-6 text-center">Employee Log</h2>
-
+      < div className="flex justify-between items-center mb-4">
+        <h2 className="text-2xl font-bold">Employee Log</h2>
         <button
           onClick={() => {
             setShowForm(true);
-            setFormData({ name: '', email: '', department: '', nik: '', phone_number: ''});
+            setFormData({ name: '', email: '', department: '', nik: '', phone_number: '' });
           }}
-          className="bg-blue-900 text-white px-4 py-2 rounded mb-4 hover:bg-blue-700 transition-all"
+          className="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all"
         >
           Add Employee
         </button>
+      </div>
 
-        {showForm && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center overflow-y-auto">
-            <div className="bg-white p-6 rounded shadow-md w-full max-w-lg mx-4 md:mx-0 h-full md:h-auto md:overflow-y-auto">
-              <h2 className="text-2xl font-bold mb-3 mt-6 text-center">Add New Employee</h2>
-              <form onSubmit={handleFormSubmit}>
-                <div className="mb-4">
-                  <label className="block text-gray-700">Nama</label>
-                  <input
-                    type="text"
-                    name="name"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded"
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700">Email</label>
-                  <input
-                    type="email"
-                    name="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded"
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700">Department</label>
-                  <input
-                    type="text"
-                    name="department"
-                    value={formData.department}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded"
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700">NIK</label>
-                  <input
-                    type="text"
-                    name="nik"
-                    value={formData.nik}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded"
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700">Phone Number</label>
-                  <input
-                    type="text"
-                    name="phone_number"
-                    value={formData.phone_number}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded"
-                    required
-                  />
-                </div>
-                <div className="flex justify-between mt-4">
-                  <button
-                    type="button"
-                    onClick={() => setShowForm(false)}
-                    className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 transition-all"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all"
-                  >
-                    Submit
-                  </button>
-                </div>
-              </form>
-            </div>
+      {showForm && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center w-full">
+          <div className="bg-white p-6 rounded shadow-md w-full max-w-lg mx-4 md:mx-0 h-full md:h-auto md:overflow-y-auto">
+            <h2 className="text-2xl font-bold mb-3 mt-6 text-center">Add New Employee</h2>
+            <form onSubmit={handleFormSubmit}>
+              <div className="mb-4">
+                <label className="block text-gray-700">Nama</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={formData.name}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700">Department</label>
+                <input
+                  type="text"
+                  name="department"
+                  value={formData.department}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700">NIK</label>
+                <input
+                  type="text"
+                  name="nik"
+                  value={formData.nik}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700">Phone Number</label>
+                <input
+                  type="text"
+                  name="phone_number"
+                  value={formData.phone_number}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border rounded"
+                  required
+                />
+              </div>
+              <div className="flex justify-between mt-4">
+                <button
+                  type="button"
+                  onClick={() => setShowForm(false)}
+                  className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
           </div>
-        )}
-
-        {editForm && (
-          <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center overflow-y-auto">
-            <div className="bg-white p-6 rounded shadow-md w-full max-w-lg mx-4 md:mx-0 h-full md:h-auto md:overflow-y-auto">
-              <h2 className="text-2xl font-bold mb-3 mt-6 text-center">Edit Employee Details</h2>
-              <form onSubmit={handleEditFormSubmit}>
-                <div className="mb-4">
-                  <label className="block text-gray-700">Phone Number</label>
-                  <input
-                    type="text"
-                    name="phone_number"
-                    value={formData.phone_number}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded"
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-gray-700">Department</label>
-                  <input
-                    type="text"
-                    name="department"
-                    value={formData.department}
-                    onChange={handleInputChange}
-                    className="w-full px-3 py-2 border rounded"
-                    required
-                  />
-                </div>
-                <div className="flex justify-between mt-4">
-                  <button
-                    type="button"
-                    onClick={() => setEditForm(false)}
-                    className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 transition-all"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    className="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all"
-                  >
-                    Save Changes
-                  </button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
-
-        <div className="overflow-x-auto shadow-md rounded-lg border border-gray-300">
-          <table className="w-full text-sm text-gray-700">
-            <thead className="bg-gray-100 text-base text-gray-700">
-              <tr>
-                <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">NIK</th>
-                <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Nama</th>
-                <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Department</th>
-                <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Email</th>
-                <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Phone Number</th>
-                <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {employees.map((employee) => (
-                <tr key={employee.name} className="odd:bg-white even:bg-gray-50 border-b">
-                  <td className="px-6 py-3 text-center">{employee.nik}</td>
-                  <td className="px-6 py-3 text-center">{employee.name}</td>
-                  <td className="px-6 py-3 text-center">{employee.department}</td>
-                  <td className="px-6 py-3 text-center">{employee.email}</td>
-                  <td className="px-6 py-3 text-center">{employee.phone_number}</td>
-                  <td className="px-6 py-3 text-center">
-                    <button onClick={() => handleEdit(employee)} className="text-blue-900 mr-2 hover:text-blue-700">
-                      <FaPencilAlt size={20} />
-                    </button>
-                    <button onClick={() => handleDelete(employee.nik)} className="text-red-500 hover:text-red-700">
-                      <FaTrash size={20} />
-                    </button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
         </div>
+      )}
+
+      {editForm && (
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center overflow-y-auto">
+          <div className="bg-white p-6 rounded shadow-md w-full max-w-lg mx-4 md:mx-0 h-full md:h-auto md:overflow-y-auto">
+            <h2 className="text-2xl font-bold mb-3 mt-6 text-center">Edit Employee Details</h2>
+            <form onSubmit={handleEditFormSubmit}>
+              <div className="mb-4">
+                <label className="block text-gray-700">Phone Number</label>
+                <input
+                  type="text"
+                  name="phone_number"
+                  value={formData.phone_number}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border rounded"
+                  required
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-gray-700">Department</label>
+                <input
+                  type="text"
+                  name="department"
+                  value={formData.department}
+                  onChange={handleInputChange}
+                  className=" w-full px-3 py-2 border rounded"
+                  required
+                />
+              </div>
+              <div className="flex justify-between mt-4">
+                <button
+                  type="button"
+                  onClick={() => setEditForm(false)}
+                  className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-400 transition-all"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="bg-blue-900 text-white px-4 py-2 rounded hover:bg-blue-700 transition-all"
+                >
+                  Save Changes
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      <div className="relative overflow-x-auto shadow-md rounded-lg border border-gray-200 w-full mt-10">
+        <table className="w-full text-sm text-gray-700">
+          <thead className="bg-gray-200 text-base text-gray-800 border-gray-200">
+            <tr>
+              <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">NIK</th>
+              <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Nama</th>
+              <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Department</th>
+              <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Email</th>
+              <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Phone Number</th>
+              <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {employees.map((employee) => (
+              <tr key={employee.nik} className="odd:bg-white even:bg-gray-50 border-b">
+                <td className="px-6 py-3 text-center">{employee.nik}</td>
+                <td className="px-6 py-3 text-center">{employee.name}</td>
+                <td className="px-6 py-3 text-center">{employee.department}</td>
+                <td className="px-6 py-3 text-center">{employee.email}</td>
+                <td className="px-6 py-3 text-center">{employee.phone_number}</td>
+                <td className="px-6 py-3 text-center">
+                  <button onClick={() => handleEdit(employee)} className="text-blue-900 mr-2 hover:text-blue-700">
+                    <FaPencilAlt size={20} />
+                  </button>
+                  <button onClick={() => handleDelete(employee.nik)} className="text-red-500 hover:text-red-700">
+                    <FaTrash size={20} />
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       </div>
     </div>
   );

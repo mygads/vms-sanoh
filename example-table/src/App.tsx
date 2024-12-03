@@ -17,11 +17,11 @@ const App: React.FC = () => {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/tablet" element={<Tablet />} />
-        <Route path="/tablet/checkin" element={<CheckInForm />} />
-        <Route path="/tablet/checkout" element={<CheckOutPage />} />
-        <Route path="/tablet/print/:visitorId" element={<PrintReceipt />} />
+          <Route path="/" element={<Login />} />
+          <Route path="/tablet" element={<Tablet />} />
+          <Route path="/tablet/checkin" element={<CheckInForm />} />
+          <Route path="/tablet/checkout" element={<CheckOutPage />} />
+          <Route path="/tablet/print/:visitorId" element={<PrintReceipt />} />
         <Route element={<DefaultLayout />}>
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/visitor-log" element={<VisitorLog />} />

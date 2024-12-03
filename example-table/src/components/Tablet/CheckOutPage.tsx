@@ -83,7 +83,7 @@ const CheckOutPage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-6">Visitor Check-out</h2>
+      <h2 className="text-2xl font-bold text-center mb-6">Visitor Check-out</h2>
 
       {showFilterButton && (
         <div className="mb-6">
@@ -100,16 +100,16 @@ const CheckOutPage: React.FC = () => {
         </div>
       )}
 
-      <div className="relative overflow-x-auto shadow-md rounded-lg border border-gray-300">
-        <table className="w-full text-sm text-gray-700">
-          <thead className="bg-gray-100 text-base text-gray-700">
+      <div className="relative overflow-x-auto shadow-md rounded-lg border border-gray-200">
+        <table className="w-full text-sm text-gray-900">
+          <thead className="bg-gray-200 text-base text-gray-700">
             <tr>
               {/* <th className="py-3 text-center border-b border-b-gray-400 w-24">Foto</th> */}
-              <th className="py-3 text-center border-b border-b-gray-400 w-40">No Visitor</th>
-              <th className="py-3 text-center border-b border-b-gray-400">Nama</th>
-              <th className="py-3 text-center border-b border-b-gray-400">Perusahaan</th>
-              <th className="py-3 text-center border-b border-b-gray-400">Keperluan</th>
-              <th className="py-3 text-center border-b border-b-gray-400">Action</th>
+              <th className="py-3 text-center border-b border-b-gray-400 w-30">NO VISITOR</th>
+              <th className="py-3 text-center border-b border-b-gray-400">NAMA</th>
+              <th className="py-3 text-center border-b border-b-gray-400">PERUSAHAAN</th>
+              <th className="py-3 text-center border-b border-b-gray-400">KEPERLUAN</th>
+              <th className="py-3 text-center border-b border-b-gray-400">ACTION</th>
             </tr>
           </thead>
           <tbody>
