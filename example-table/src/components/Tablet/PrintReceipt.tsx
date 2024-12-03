@@ -74,7 +74,7 @@ const PrintReceipt: React.FC = () => {
         // Find the printer
         let printer;
         try {
-          printer = await qz.printers.find("Iware IW-J200BT"); // Adjust with your printer's name
+          printer = await qz.printers.find("IW-J200BT"); // Adjust with your printer's name
         } catch (err) {
           console.error('Printer not found:', err);
           alert('Printer not found. Please ensure it is connected and paired.');
