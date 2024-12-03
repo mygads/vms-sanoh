@@ -37,28 +37,27 @@ const PrintReceipt: React.FC = () => {
     const printWithQZTray = async () => {
       if (visitorData && qrCodeDataUrl && !isPrinting) {
         setIsPrinting(true);
-
+  
         // Initialize QZ Tray
         const qz = (window as any).qz;
-
+  
         if (!qz) {
           alert('QZ Tray is not loaded. Please ensure qz-tray.js is included.');
           setIsPrinting(false);
           return;
         }
-
-        qz.api.setPromiseType(window.Promise);
-
+  
+        // **Set the proper Promise type**
+        qz.api.setPromiseType((resolver: (value?: unknown) => void) => new Promise(resolver));
+  
         // For secure printing, you may need to set up certificate and signature
-        qz.security.setCertificatePromise(function (resolve: any) {
-          // Resolve with your certificate information
-          resolve();
+        qz.security.setCertificatePromise(function (resolve: (value?: unknown) => void) {
+          resolve(); // Provide certificate details if required
         });
-
+  
         qz.security.setSignaturePromise(function () {
-          return function (resolve: any) {
-            // Sign the toSign data and resolve
-            resolve();
+          return function (resolve: (value?: unknown) => void) {
+            resolve(); // Provide signature if required
           };
         });
 
