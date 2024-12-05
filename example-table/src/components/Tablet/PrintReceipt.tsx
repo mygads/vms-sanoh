@@ -1,10 +1,9 @@
+// PrintReceipt.tsx
+
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getVisitorPrintData, Visitor } from '../../services/apiService';
-import { renderToString } from 'react-dom/server';
 import QRCode from 'qrcode';
-
-// Import styles if using CSS modules or adjust accordingly
 import logoSanoh from '/logo-sanoh.png'; // Adjust the path as needed
 
 const PrintReceipt: React.FC = () => {
@@ -37,94 +36,76 @@ const PrintReceipt: React.FC = () => {
     const printWithQZTray = async () => {
       if (visitorData && qrCodeDataUrl && !isPrinting) {
         setIsPrinting(true);
-  
+
         // Initialize QZ Tray
         const qz = (window as any).qz;
-  
+
         if (!qz) {
           alert('QZ Tray is not loaded. Please ensure qz-tray.js is included.');
           setIsPrinting(false);
           return;
         }
-  
-        // **Set the proper Promise type**
+
+        // Set the proper Promise type
         qz.api.setPromiseType((resolver: (value?: unknown) => void) => new Promise(resolver));
-  
-        // For secure printing, you may need to set up certificate and signature
-        qz.security.setCertificatePromise(function (resolve: (value?: unknown) => void) {
-          resolve(); // Provide certificate details if required
+
+        // Setup security promises
+        qz.security.setCertificatePromise(function(resolve: (value?: unknown) => void) {
+          resolve();
         });
-  
-        qz.security.setSignaturePromise(function () {
-          return function (resolve: (value?: unknown) => void) {
-            resolve(); // Provide signature if required
+
+        qz.security.setSignaturePromise(function() {
+          return function(resolve: (value?: unknown) => void) {
+            resolve();
           };
         });
 
-        // Connect to QZ Tray
         try {
-          await qz.websocket.connect({ host: "192.168.56.1" });
-        } catch (err) {
-          console.error('Failed to connect to QZ Tray:', err);
-          setIsPrinting(false);
-          return;
-        }
+          // Connect to QZ Tray
+          await qz.websocket.connect();
 
-        // Find the printer
-        let printer;
-        try {
-          printer = await qz.printers.find("IW-J200BT"); // Adjust with your printer's name
-        } catch (err) {
-          console.error('Printer not found:', err);
-          alert('Printer not found. Please ensure it is connected and paired.');
-          setIsPrinting(false);
-          return;
-        }
+          // Verify printer availability
+          const printers = await qz.printers.find();
+          console.log('Available printers:', printers);
+          const printer = 'IW-J200BT'; // Ensure this matches the exact printer name
 
-        // Prepare print data
-        // const config = qz.configs.create(printer, {
-        //   encoding: 'UTF-8',
-        //   copies: 1,
-        //   density: 1,
-        //   margins: { top: 0, right: 0, bottom: 0, left: 0 },
-        //   paperSize: { width: '3.15in', height: '6.30in' },
-        //   colorType: 'grayscale', // Print in grayscale
-        //   duplex: false, // Single-sided printing
-        //   jobName: 'Visitor Receipt', // Custom job name
-        // });
+          if (!printers.includes(printer)) {
+            throw new Error(`Printer "${printer}" not found. Available printers: ${printers.join(', ')}`);
+          }
 
-        const config = qz.configs.create(printer, {
-          encoding: 'UTF-8', // Adjust encoding if necessary
-          copies: 1, // Number of copies
-          density: 1, // Print density
-          margins: { top: 0, right: 0, bottom: 0, left: 0 }, // Margins
-          paperSize: { width: '3.15in', height: '6.30in' }, // Paper size
-        });
+          // Create printer config
+          const config = qz.configs.create(printer, {
+            encoding: 'UTF-8',
+            copies: 1,
+            density: 1,
+            margins: { top: 0, right: 0, bottom: 0, left: 0 },
+            paperSize: { width: '3.15in', height: '6.30in' },
+          });
 
-        // Generate the receipt content as HTML string
-        const receiptHtml = renderReceiptHtml(visitorData, qrCodeDataUrl);
+          // Generate receipt HTML
+          const receiptHtml = renderReceiptHtml(visitorData, qrCodeDataUrl);
 
-        // Prepare the print data
-        const data = [
-          {
+          // Prepare print data
+          const data = [{
             type: 'html',
             format: 'plain',
             data: receiptHtml,
-          },
-        ];
+          }];
 
-        // Send the print job
-        try {
+          // Print
           await qz.print(config, data);
           console.log('Print job submitted successfully');
+
         } catch (err) {
-          console.error('Failed to print:', err);
-          alert('Failed to print: ' + err);
+          console.error('QZ Tray error:', err);
+          alert(`Printing error: ${err}`);
         } finally {
-          // Disconnect from QZ Tray
-          await qz.websocket.disconnect();
+          // Cleanup
+          if (qz.websocket.isActive()) {
+            await qz.websocket.disconnect();
+          }
           setIsPrinting(false);
-          navigate('/tablet'); // Redirect after printing
+          navigate('/tablet');
         }
       }
     };
@@ -132,83 +113,74 @@ const PrintReceipt: React.FC = () => {
     printWithQZTray();
   }, [visitorData, qrCodeDataUrl, isPrinting, navigate]);
 
-  if (!visitorData || !qrCodeDataUrl) {
-    return <div>Loading...</div>;
-  }
-
-  // Function to generate the receipt HTML content
-  const renderReceiptHtml = (visitor: Visitor, qrCodeUrl: string) => {
-    return renderToString(
-      <div style={{ width: '3.15in', fontFamily: 'Arial, sans-serif', fontSize: '10px' }}>
-        {/* Logo */}
-        <div style={{ textAlign: 'center' }}>
-          <img src={logoSanoh} alt="Logo" style={{ width: '72px', marginBottom: '10px' }} />
+  const renderReceiptHtml = (visitorData: Visitor, qrCodeDataUrl: string) => {
+    return `
+      <div style="width: 3.15in; height: 6.30in; padding: 3px; background-color: #FFFFFF;">
+        <img src="${logoSanoh}" style="width: 72px; display: block; margin: 0 auto 10px;" />
+        <img src="${qrCodeDataUrl}" style="width: 60px; height: 60px; display: block; margin: 0 auto 5px;" />
+        <div style="text-align: center; color: #1F2937; font-size: 20px; font-weight: bold; margin-bottom: 5px;">
+          ${visitorData.visitor_id}
         </div>
-
-        {/* QR Code */}
-        <div style={{ textAlign: 'center', marginBottom: '5px' }}>
-          <img src={qrCodeUrl} alt="QR Code" style={{ width: '60px', height: '60px' }} />
+        <div style="margin-bottom: 5px;">
+          <div style="display: flex; margin-bottom: 4px;">
+            <div style="font-size: 10px; color: #374151; font-weight: bold; width: 40%;">Tanggal Masuk</div>
+            <div style="font-size: 10px; color: #374151; width: 60%;">: ${visitorData.visitor_checkin}</div>
+          </div>
+          <div style="display: flex; margin-bottom: 4px;">
+            <div style="font-size: 10px; color: #374151; font-weight: bold; width: 40%;">Nama Tamu</div>
+            <div style="font-size: 10px; color: #374151; width: 60%;">: ${visitorData.visitor_name}</div>
+          </div>
+          <div style="display: flex; margin-bottom: 4px;">
+            <div style="font-size: 10px; color: #374151; font-weight: bold; width: 40%;">Nama Perusahaan</div>
+            <div style="font-size: 10px; color: #374151; width: 60%;">: ${visitorData.visitor_from}</div>
+          </div>
+          <div style="display: flex; margin-bottom: 4px;">
+            <div style="font-size: 10px; color: #374151; font-weight: bold; width: 40%;">Bertemu</div>
+            <div style="font-size: 10px; color: #374151; width: 60%;">: ${visitorData.visitor_host} - ${visitorData.department}</div>
+          </div>
+          <div style="display: flex; margin-bottom: 4px;">
+            <div style="font-size: 10px; color: #374151; font-weight: bold; width: 40%;">Tujuan</div>
+            <div style="font-size: 10px; color: #374151; width: 60%;">: ${visitorData.visitor_needs}</div>
+          </div>
+          <div style="display: flex; margin-bottom: 4px;">
+            <div style="font-size: 10px; color: #374151; font-weight: bold; width: 40%;">Jumlah Tamu</div>
+            <div style="font-size: 10px; color: #374151; width: 60%;">: ${visitorData.visitor_amount}</div>
+          </div>
+          <div style="display: flex; margin-bottom: 4px;">
+            <div style="font-size: 10px; color: #374151; font-weight: bold; width: 40%;">No Kendaraan</div>
+            <div style="font-size: 10px; color: #374151; width: 60%;">: ${visitorData.visitor_vehicle}</div>
+          </div>
         </div>
-
-        {/* Visitor ID */}
-        <div style={{ textAlign: 'center', color: '#1F2937', fontSize: '20px', fontWeight: 'bold', marginBottom: '5px' }}>
-          {visitor.visitor_id}
-        </div>
-
-        {/* Visitor Information */}
-        <div style={{ marginBottom: '5px' }}>
-          <div><strong>Tanggal Masuk:</strong> {visitor.visitor_checkin}</div>
-          <div><strong>Nama Tamu:</strong> {visitor.visitor_name}</div>
-          <div><strong>Nama Perusahaan:</strong> {visitor.visitor_from}</div>
-          <div><strong>Bertemu:</strong> {visitor.visitor_host} - {visitor.department}</div>
-          <div><strong>Tujuan:</strong> {visitor.visitor_needs}</div>
-          <div><strong>Jumlah Tamu:</strong> {visitor.visitor_amount}</div>
-          <div><strong>No Kendaraan:</strong> {visitor.visitor_vehicle}</div>
-        </div>
-
-        {/* Signature Section */}
-        <div style={{ marginTop: '10px' }}>
-          <div style={{ textAlign: 'center', fontWeight: 'bold', marginBottom: '5px' }}>TANDA TANGAN</div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <div style={{ width: '30%', textAlign: 'center' }}>
-              <div style={{ fontSize: '8px', color: '#6B7280', marginBottom: '40px' }}>Visitor</div>
-              <div style={{ borderTop: '1px solid #4B5563', width: '100%' }}></div>
+        <div style="margin-top: 10px;">
+          <div style="text-align: center; font-weight: bold; margin-bottom: 5px;">TANDA TANGAN</div>
+          <div style="display: flex; justify-content: space-between;">
+            <div style="width: 30%; text-align: center;">
+              <div style="font-size: 8px; color: #6B7280; margin-bottom: 40px;">Visitor</div>
+              <div style="border-top: 1px solid #4B5563; width: 100%;"></div>
             </div>
-            <div style={{ width: '30%', textAlign: 'center' }}>
-              <div style={{ fontSize: '8px', color: '#6B7280', marginBottom: '40px' }}>Penerima Tamu</div>
-              <div style={{ borderTop: '1px solid #4B5563', width: '100%' }}></div>
+            <div style="width: 30%; text-align: center;">
+              <div style="font-size: 8px; color: #6B7280; margin-bottom: 40px;">Penerima Tamu</div>
+              <div style="border-top: 1px solid #4B5563; width: 100%;"></div>
             </div>
-            <div style={{ width: '30%', textAlign: 'center' }}>
-              <div style={{ fontSize: '8px', color: '#6B7280', marginBottom: '40px' }}>Security</div>
-              <div style={{ borderTop: '1px solid #4B5563', width: '100%' }}></div>
+            <div style="width: 30%; text-align: center;">
+              <div style="font-size: 8px; color: #6B7280; margin-bottom: 40px;">Security</div>
+              <div style="border-top: 1px solid #4B5563; width: 100%;"></div>
             </div>
           </div>
         </div>
-
-        {/* Notice */}
-        <div style={{ textAlign: 'center', fontSize: '8px', color: '#374151', marginTop: '10px' }}>
-          <div style={{ fontWeight: 'bold' }}>
-            Dilarang mengambil gambar atau foto di area perusahaan tanpa izin
-          </div>
-          <div style={{ fontStyle: 'italic' }}>
-            (Taking pictures or photos in the company area without permission is prohibited)
-          </div>
+        <div style="text-align: center; font-size: 8px; color: #374151; margin-top: 10px;">
+          <div style="font-weight: bold;">Dilarang mengambil gambar atau foto di area perusahaan tanpa izin</div>
+          <div style="font-style: italic;">(Taking pictures or photos in the company area without permission is prohibited)</div>
         </div>
-
-        {/* Note */}
-        <div style={{ textAlign: 'center', fontSize: '8px', color: '#374151', marginTop: '5px' }}>
-          <div style={{ fontWeight: 'bold' }}>
-            NOTE: Form harus kembali ke pos security
-          </div>
-          <div style={{ fontStyle: 'italic' }}>
-            (Please return this form to security post)
-          </div>
+        <div style="text-align: center; font-size: 8px; color: #374151; margin-top: 5px;">
+          <div style="font-weight: bold;">NOTE: Form harus kembali ke pos security</div>
+          <div style="font-style: italic;">(Please return this form to security post)</div>
         </div>
       </div>
-    );
+    `;
   };
 
-  return null; // Since the component handles printing, no need to render anything
+  return null;
 };
 
 export default PrintReceipt;
