@@ -85,11 +85,11 @@ const VisitorLog: React.FC = () => {
   const getRowColorClass = (needs: string) => {
     switch (needs) {
       case 'Meeting':
-        return 'bg-blue-100';
+        return 'bg-blue-50';
       case 'Delivery':
-        return 'bg-green-100';
+        return 'bg-green-50';
       case 'Contractor':
-        return 'bg-red-100';
+        return 'bg-red-50';
       default:
         return 'bg-white';
     }
@@ -119,34 +119,34 @@ const VisitorLog: React.FC = () => {
 
       <div className="relative overflow-x-auto shadow-md rounded-lg border border-gray-300">
         <table className="w-full text-sm text-gray-700">
-          <thead className="bg-gray-100 text-base text-gray-700">
+          <thead className="bg-gray-300 text-base text-gray-700">
             <tr>
               <th className="py-3 px-4 text-center border-b border-b-gray-400 w-40">
-                No Visitor
+                NO VISITOR
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400">
-                Nama
+                NAMA
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400">
-                Perusahaan
+                PERUSAHAAN
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400">
-                Host
+                HOST
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400">
-                Keperluan
+                KEPERLUAN
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400">
-                Jumlah Tamu
+                JUMLAH TAMU
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400">
-                Nomor Kendaraan
+                NOMOR KENDARAAN
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400 w-40">
-                Check-in
+                CHECK IN
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400 w-40">
-                Check-out
+                CHECK OUT
               </th>
             </tr>
           </thead>
@@ -199,6 +199,7 @@ const VisitorLog: React.FC = () => {
         </table>
       </div>
 
+      {/* Pagination */}
       {filteredVisitors.length > itemsPerPage && (
         <div className="flex justify-center items-center space-x-2 mt-4">
           <button

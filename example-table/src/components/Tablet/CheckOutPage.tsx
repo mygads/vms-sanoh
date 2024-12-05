@@ -54,11 +54,11 @@ const CheckOutPage: React.FC = () => {
   const getRowColorClass = (needs: string) => {
     switch (needs) {
       case 'Meeting':
-        return 'bg-blue-100';
+        return 'bg-blue-50';
       case 'Delivery':
-        return 'bg-green-100';
+        return 'bg-green-50';
       case 'Contractor':
-        return 'bg-red-100';
+        return 'bg-red-50';
       default:
         return 'bg-white';
     }
@@ -102,7 +102,7 @@ const CheckOutPage: React.FC = () => {
 
       <div className="relative overflow-x-auto shadow-md rounded-lg border border-gray-200">
         <table className="w-full text-sm text-gray-900">
-          <thead className="bg-gray-200 text-base text-gray-700">
+          <thead className="bg-gray-300 text-base text-gray-900">
             <tr>
               {/* <th className="py-3 text-center border-b border-b-gray-400 w-24">Foto</th> */}
               <th className="py-3 text-center border-b border-b-gray-400 w-30">NO VISITOR</th>
@@ -172,7 +172,7 @@ const CheckOutPage: React.FC = () => {
             &lt;
           </button>
 
-          <span className="px-4 py-2 bg-blue-500 text-white rounded-md">{currentPage}</span>
+          <span className="px-4 py-2 bg-blue-800 text-white rounded-md">{currentPage}</span>
 
           <button
             className={`px-4 py-2 bg-gray-300 text-gray-700 rounded-md ${

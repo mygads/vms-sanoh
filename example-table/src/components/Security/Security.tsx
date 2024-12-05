@@ -81,11 +81,11 @@ const Security: React.FC = () => {
   const getRowColorClass = (needs: string) => {
     switch (needs) {
       case 'Meeting':
-        return 'bg-blue-100';
+        return 'bg-blue-50';
       case 'Delivery':
-        return 'bg-green-100';
+        return 'bg-green-50';
       case 'Contractor':
-        return 'bg-red-100';
+        return 'bg-red-50';
       default:
         return 'bg-white';
     }
@@ -97,16 +97,16 @@ const Security: React.FC = () => {
       <div className="flex justify-between w-full space-x-4">
         {/* Visitor Active Card */}
         <div className="bg-white shadow-lg rounded-lg p-4 flex-1 text-center">
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 mx-auto mb-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 mx-auto mb-2 text-blue-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 14l4-4m0 0l-4-4m4 4H8" />
           </svg>
-          <h2 className="text-2xl font-semibold">Visitor Active</h2>
-          <p className="text-4xl mt-2 text-blue-600 font-bold">{visitorCount}</p>
+          <h2 className="text-2xl font-semibold">Visitor Aktif</h2>
+          <p className="text-4xl mt-2 text-blue-800 font-bold">{visitorCount}</p>
         </div>
 
         {/* Date Card */}
         <div className="bg-white shadow-lg rounded-lg p-4 flex-1 text-center">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-10 h-10 mx-auto mb-2 text-blue-600">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-10 h-10 mx-auto mb-2 text-blue-800">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 3H5c-1.104 0-2 .896-2  2v14c0 1.104.896 2 2 2h14c1.104 0 2-.896 2-2V5c0-1.104-.896-2-2-2zM7 3v4M17 3v4" />
           </svg>
           <h2 className="text-2xl font-semibold">Tanggal hari ini</h2>
@@ -115,21 +115,21 @@ const Security: React.FC = () => {
 
         {/* Time Card */}
         <div className="bg-white shadow-lg rounded-lg p-4 flex-1 text-center">
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 mx-auto mb-2 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 mx-auto mb-2 text-blue-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6l3 3M16.5 4h-9A2.5 2.5 0 005 6.5v11A2.5 2.5 0 007.5 20h9A2.5 2.5 0 0019 17.5V6.5A2.5 2.5 0 0016.5 4z" />
           </svg>
           <h2 className="text-2xl font-semibold">Jam</h2>
-          <p className="text-4xl mt-2 text-blue-600 font-bold">{currentTime}</p>
+          <p className="text-4xl mt-2 text-blue-800 font-bold">{currentTime}</p>
         </div>
       </div>
 
       {/* Visitor Table */}
       <div className="relative overflow-x-auto shadow-md rounded-lg border border-gray-200 w-full mt-10">
         <table className="w-full text-sm text-gray-700">
-          <thead className="bg-gray-200 text-base text-gray-800 border-gray-200">
+          <thead className="bg-gray-300 text-base text-gray-800 border-gray-200">
             <tr>
               <th className="py-3 px-2 text-center border-b border-gray-400 w-40">NO VISITOR</th>
-              <th className="py-3 px-2 text-center border-b border-gray-400">NAMA</th>
+              <th className="py-3 px-2 text-center border-b border-gray-400">NAMA TAMU</th>
               <th className="py-3 px-2 text-center border-b border-gray-400">PERUSAHAAN</th>
               <th className="py-3 px-2 text-center border-b border-gray-400">HOST</th>
               <th className="py-3 px-2 text-center border-b border-gray-400">KEPERLUAN</th>

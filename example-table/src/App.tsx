@@ -11,6 +11,7 @@ import Admin from './components/Admin/Admin';
 import VisitorLog from "./components/Admin/VisitorLog";
 import Employees from "./components/Admin/Employees";
 import DefaultLayout from "./components/DefaultLayout";
+import DisplayMode from './components/Admin/DisplayMode';  // Correct path
 import './index.css';
 
 const App: React.FC = () => {
@@ -22,7 +23,7 @@ const App: React.FC = () => {
           <Route path="/tablet/checkin" element={<CheckInForm />} />
           <Route path="/tablet/checkout" element={<CheckOutPage />} />
           <Route path="/tablet/print/:visitorId" element={<PrintReceipt />} />
-        <Route element={<DefaultLayout />}>
+          <Route element={<DefaultLayout />}>
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/visitor-log" element={<VisitorLog />} />
           <Route path="/admin/employees" element={<Employees />} />
@@ -33,6 +34,7 @@ const App: React.FC = () => {
         </Route>
       </Routes>
     </Router>
+
   );
 };
 

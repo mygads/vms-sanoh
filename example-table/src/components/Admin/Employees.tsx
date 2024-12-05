@@ -247,16 +247,16 @@ const EmployeeLog: React.FC = () => {
         </div>
       )}
 
-      <div className="overflow-x-auto shadow-md rounded-lg border border-gray-200 w-full mt-10">
+      <div className="overflow-x-auto shadow-md rounded-lg border border-gray-100 w-full mt-10">
         <table className="w-full text-sm text-gray-700">
           <thead className="bg-gray-200 text-base text-gray-800 border-gray-200">
             <tr>
-              <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">NIK</th>
-              <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Nama</th>
-              <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Department</th>
-              <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Email</th>
-              <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Phone Number</th>
-              <th className="py-3 px-6 text-center border-b border-b-gray-400 bg-gray-100 z-10">Actions</th>
+              <th className="py-3 px-6 text-center border-b border-b-gray-300 bg-gray-300 z-10">NIK</th>
+              <th className="py-3 px-6 text-center border-b border-b-gray-300 bg-gray-300 z-10">NAMA</th>
+              <th className="py-3 px-6 text-center border-b border-b-gray-300 bg-gray-300 z-10">DEPARTMENT</th>
+              <th className="py-3 px-6 text-center border-b border-b-gray-300 bg-gray-300 z-10">EMAIL</th>
+              <th className="py-3 px-6 text-center border-b border-b-gray-300 bg-gray-300 z-10">PHONE NUMBER</th>
+              <th className="py-3 px-6 text-center border-b border-b-gray-300 bg-gray-300 z-10">ACTIONS</th>
             </tr>
           </thead>
           <tbody>
@@ -268,12 +268,20 @@ const EmployeeLog: React.FC = () => {
                 <td className="px-6 py-3 text-center">{employee.email}</td>
                 <td className="px-6 py-3 text-center">{employee.phone_number}</td>
                 <td className="px-6 py-3 text-center">
-                  <button onClick={() => handleEdit(employee)} className="text-blue-900 mr-2 hover:text-blue-700">
-                    <FaPencilAlt size={20} />
-                  </button>
-                  <button onClick={() => handleDelete(employee.nik)} className="text-red-500 hover:text-red-700">
-                    <FaTrash size={20} />
-                  </button>
+                  <div className="flex justify-center space-x-6"> {/* Jarak lebar antara tombol */}
+                    <button 
+                      onClick={() => handleEdit(employee)} 
+                      className="text-blue-700 hover:text-blue-500"
+                    >
+                      <FaPencilAlt size={20} />
+                    </button>
+                    <button 
+                      onClick={() => handleDelete(employee.nik)} 
+                      className="text-blue-800 hover:text-blue-700"
+                    >
+                      <FaTrash size={20} />
+                    </button>
+                  </div>
                 </td>
               </tr>
             ))}
