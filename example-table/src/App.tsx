@@ -11,7 +11,7 @@ import Admin from './components/Admin/Admin';
 import VisitorLog from "./components/Admin/VisitorLog";
 import Employees from "./components/Admin/Employees";
 import DefaultLayout from "./components/DefaultLayout";
-import DisplayMode from './components/Admin/DisplayMode';  // Correct path
+// import DisplayMode from './components/Admin/DisplayMode';  // Correct path
 import './index.css';
 
 const App: React.FC = () => {

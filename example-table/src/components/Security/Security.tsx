@@ -113,16 +113,18 @@ const Security: React.FC = () => {
   return (
     <div className="flex flex-col space-y-6 font-satoshi">
       {/* Toggle Switch */}
-      <div className="flex justify-end">
-        <div className="flex items-center">
-          <ReactSwitch
-            checked={isRestricted}
-            onChange={toggleRestrictedView}
-            onColor="#2563EB"
-            offColor="#D1D5DB"
-          />
+      {!isRestricted && (
+        <div className="flex justify-end">
+          <div className="flex items-center">
+            <ReactSwitch
+              checked={isRestricted}
+              onChange={toggleRestrictedView}
+              onColor="#2563EB"
+              offColor="#D1D5DB"
+            />
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Cards Row */}
       <div className="flex justify-between w-full space-x-4">
