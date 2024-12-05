@@ -1,6 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { fetchVisitorData } from '../../services/apiService';
 import '@fontsource/poppins';
+import ReactSwitch from 'react-switch';
+
+// import { FaLock, FaUnlock } from 'react-icons/fa';
 
 interface Visitor {
   visitor_id: string;
@@ -22,6 +26,8 @@ const Security: React.FC = () => {
   const [currentVisitors, setCurrentVisitors] = useState<Visitor[]>([]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const itemsPerPage = 8;
+
+  // const location = useLocation();
 
   // Data Fetching useEffect
   useEffect(() => {
@@ -91,8 +97,33 @@ const Security: React.FC = () => {
     }
   };
 
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  const isRestricted = location.pathname === '/security/restricted';
+
+  const toggleRestrictedView = () => {
+    if (isRestricted) {
+      navigate('/security');
+    } else {
+      navigate('/security/restricted');
+    }
+  };
+
   return (
     <div className="flex flex-col space-y-6 font-satoshi">
+      {/* Toggle Switch */}
+      <div className="flex justify-end">
+        <div className="flex items-center">
+          <ReactSwitch
+            checked={isRestricted}
+            onChange={toggleRestrictedView}
+            onColor="#2563EB"
+            offColor="#D1D5DB"
+          />
+        </div>
+      </div>
+
       {/* Cards Row */}
       <div className="flex justify-between w-full space-x-4">
         {/* Visitor Active Card */}

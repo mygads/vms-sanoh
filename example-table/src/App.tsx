@@ -31,6 +31,7 @@ const App: React.FC = () => {
           <Route path="/security" element={<Security />} />
           <Route path="/security/visitor-log" element={<VisitorLog />} />
         </Route>
+        <Route path="/security/restricted" element={<Security />} />
       </Routes>
     </Router>
   );

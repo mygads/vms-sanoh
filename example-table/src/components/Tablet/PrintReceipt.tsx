@@ -63,7 +63,7 @@ const PrintReceipt: React.FC = () => {
 
         // Connect to QZ Tray
         try {
-          await qz.websocket.connect();
+          await qz.websocket.connect({ host: "192.168.56.1" });
         } catch (err) {
           console.error('Failed to connect to QZ Tray:', err);
           setIsPrinting(false);
