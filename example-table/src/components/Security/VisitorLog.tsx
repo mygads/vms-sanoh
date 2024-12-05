@@ -122,31 +122,31 @@ const VisitorLog: React.FC = () => {
           <thead className="bg-gray-100 text-base text-gray-700">
             <tr>
               <th className="py-3 px-4 text-center border-b border-b-gray-400 w-40">
-                No Visitor
+                NO VISITOR
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400">
-                Nama
+                NAMA
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400">
-                Perusahaan
+                PERUSAHAAN
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400">
-                Host
+                HOST
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400">
-                Keperluan
+                KEPERLUAN
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400">
-                Jumlah Tamu
+                JUMLAH TAMU
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400">
-                Nomor Kendaraan
+                NOMOR KENDARAAN
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400 w-40">
-                Check-in
+                CHECK IN
               </th>
               <th className="py-3 px-4 text-center border-b border-b-gray-400 w-40">
-                Check-out
+                CHECK OUT
               </th>
             </tr>
           </thead>
