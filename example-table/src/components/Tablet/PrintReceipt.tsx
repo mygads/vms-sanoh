@@ -1,16 +1,15 @@
-// PrintReceipt.tsx
-
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getVisitorPrintData, Visitor } from '../../services/apiService';
 import QRCode from 'qrcode';
-import logoSanoh from '/logo-sanoh.png'; // Adjust the path as needed
+// import logoSanoh from '/logo-sanoh.png'; // Adjust the path as needed
 
 const PrintReceipt: React.FC = () => {
   const { visitorId } = useParams<{ visitorId: string }>();
   const navigate = useNavigate();
   const [visitorData, setVisitorData] = useState<Visitor | null>(null);
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
+  const [logoDataUrl, setLogoDataUrl] = useState<string>('');
   const [isPrinting, setIsPrinting] = useState<boolean>(false);
 
   useEffect(() => {
@@ -23,8 +22,17 @@ const PrintReceipt: React.FC = () => {
           // Generate QR code data URL
           const qrCodeUrl = await QRCode.toDataURL(visitorId, { margin: 0 });
           setQrCodeDataUrl(qrCodeUrl);
+
+          // Load logo image and convert to Data URL
+          const response = await fetch('/logo-sanoh.png'); // Adjust the path if needed
+          const blob = await response.blob();
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            setLogoDataUrl(reader.result as string);
+          };
+          reader.readAsDataURL(blob);
         } catch (error) {
-          console.error('Error fetching visitor data:', error);
+          console.error('Error fetching visitor data or loading images:', error);
         }
       }
     };
@@ -34,7 +42,7 @@ const PrintReceipt: React.FC = () => {
 
   useEffect(() => {
     const printWithQZTray = async () => {
-      if (visitorData && qrCodeDataUrl && !isPrinting) {
+      if (visitorData && qrCodeDataUrl && logoDataUrl && !isPrinting) {
         setIsPrinting(true);
 
         // Initialize QZ Tray
@@ -50,12 +58,12 @@ const PrintReceipt: React.FC = () => {
         qz.api.setPromiseType((resolver: (value?: unknown) => void) => new Promise(resolver));
 
         // Setup security promises
-        qz.security.setCertificatePromise(function(resolve: (value?: unknown) => void) {
+        qz.security.setCertificatePromise((resolve: (value?: unknown) => void) => {
           resolve();
         });
 
-        qz.security.setSignaturePromise(function() {
-          return function(resolve: (value?: unknown) => void) {
+        qz.security.setSignaturePromise(() => {
+          return (resolve: (value?: unknown) => void) => {
             resolve();
           };
         });
@@ -64,14 +72,9 @@ const PrintReceipt: React.FC = () => {
           // Connect to QZ Tray
           await qz.websocket.connect();
 
-          // Verify printer availability
-          const printers = await qz.printers.find();
-          console.log('Available printers:', printers);
-          const printer = 'IW-J200BT'; // Ensure this matches the exact printer name
-
-          if (!printers.includes(printer)) {
-            throw new Error(`Printer "${printer}" not found. Available printers: ${printers.join(', ')}`);
-          }
+          // Get the default printer
+          const printer = await qz.printers.getDefault();
+          console.log('Default printer:', printer);
 
           // Create printer config
           const config = qz.configs.create(printer, {
@@ -83,14 +86,16 @@ const PrintReceipt: React.FC = () => {
           });
 
           // Generate receipt HTML
-          const receiptHtml = renderReceiptHtml(visitorData, qrCodeDataUrl);
+          const receiptHtml = renderReceiptHtml(visitorData, qrCodeDataUrl, logoDataUrl);
 
           // Prepare print data
-          const data = [{
-            type: 'html',
-            format: 'plain',
-            data: receiptHtml,
-          }];
+          const data = [
+            {
+              type: 'html',
+              format: 'plain',
+              data: receiptHtml,
+            },
+          ];
 
           // Print
           await qz.print(config, data);
@@ -111,12 +116,16 @@ const PrintReceipt: React.FC = () => {
     };
 
     printWithQZTray();
-  }, [visitorData, qrCodeDataUrl, isPrinting, navigate]);
+  }, [visitorData, qrCodeDataUrl, logoDataUrl, isPrinting, navigate]);
 
-  const renderReceiptHtml = (visitorData: Visitor, qrCodeDataUrl: string) => {
+  const renderReceiptHtml = (
+    visitorData: Visitor,
+    qrCodeDataUrl: string,
+    logoDataUrl: string
+  ) => {
     return `
       <div style="width: 3.15in; height: 6.30in; padding: 3px; background-color: #FFFFFF;">
-        <img src="${logoSanoh}" style="width: 72px; display: block; margin: 0 auto 10px;" />
+        <img src="${logoDataUrl}" style="width: 72px; display: block; margin: 0 auto 10px;" />
         <img src="${qrCodeDataUrl}" style="width: 60px; height: 60px; display: block; margin: 0 auto 5px;" />
         <div style="text-align: center; color: #1F2937; font-size: 20px; font-weight: bold; margin-bottom: 5px;">
           ${visitorData.visitor_id}
