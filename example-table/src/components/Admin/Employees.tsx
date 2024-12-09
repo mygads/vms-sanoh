@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { fetchEmployeeData, submitEmployeeData, deleteEmployeeData, updateEmployeeData } from '../../services/apiService';
 import { FaPencilAlt, FaTrash } from 'react-icons/fa';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 interface Employee {
   name: string;
   email: string;
   department: string;
   nik: string;
-  phone_number: string; // Ensure this is the correct property name
+  phone_number: string;
 }
 
 const EmployeeLog: React.FC = () => {
@@ -19,11 +21,10 @@ const EmployeeLog: React.FC = () => {
     email: '',
     department: '',
     nik: '',
-    phone_number: '', // Ensure this is the correct property name
+    phone_number: '',
   });
   const [editingEmployeeNik, setEditingEmployeeNik] = useState<string | null>(null);
 
-  // Load employees from API on initial load
   useEffect(() => {
     const loadEmployees = async () => {
       const employeeData = await fetchEmployeeData();
@@ -47,26 +48,52 @@ const EmployeeLog: React.FC = () => {
       email: formData.email,
       department: formData.department,
       nik: formData.nik,
-      phone_number: formData.phone_number, // Ensure this is the correct property name
+      phone_number: formData.phone_number,
     };
     try {
       await submitEmployeeData(newEmployee);
       setEmployees([...employees, newEmployee]);
       setShowForm(false);
       setFormData({ name: '', email: '', department: '', nik: '', phone_number: '' });
+      toast.success('Employee added successfully!');
     } catch (error) {
-      console.error('Error submitting employee data:', error);
+      toast.error('Error submitting employee data!');
     }
   };
 
+  const handleDeleteConfirmation = (employeeNik: string) => {
+    toast.promise(
+      new Promise((resolve, reject) => {
+        const isConfirmed = window.confirm('Apakah anda yakin ingin menghapus?');
+        if (isConfirmed) {
+          resolve();
+        } else {
+          reject('Deletion canceled');
+        }
+      })
+        .then(() => handleDelete(employeeNik))
+        .catch(() => {
+          // Toast for canceled deletion
+          toast.error('Deletion canceled');
+        }),
+      {
+        pending: 'Processing deletion...',
+        success: 'Employee deleted successfully!',
+        error: 'Error deleting employee!',
+      }
+    );
+  };
+  
   const handleDelete = async (employeeNik: string) => {
     try {
-      await deleteEmployeeData(employeeNik);
-      setEmployees(employees.filter((employee) => employee.nik !== employeeNik));
+      await deleteEmployeeData(employeeNik); // Ensure this API call resolves correctly
+      setEmployees(employees.filter((employee) => employee.nik !== employeeNik)); // Update employee list
     } catch (error) {
       console.error('Error deleting employee:', error);
+      toast.error('Error deleting employee!');
     }
   };
+  
 
   const handleEdit = (employee: Employee) => {
     setEditForm(true);
@@ -76,7 +103,7 @@ const EmployeeLog: React.FC = () => {
       email: employee.email,
       department: employee.department,
       nik: employee.nik,
-      phone_number: employee.phone_number, // Ensure this is the correct property name
+      phone_number: employee.phone_number,
     });
   };
 
@@ -86,7 +113,7 @@ const EmployeeLog: React.FC = () => {
       try {
         await updateEmployeeData(editingEmployeeNik, {
           email: formData.email,
-          phone_number: formData.phone_number, // Ensure this is the correct property name
+          phone_number: formData.phone_number,
           department: formData.department,
         });
         setEmployees(
@@ -99,22 +126,23 @@ const EmployeeLog: React.FC = () => {
         setEditForm(false);
         setFormData({ name: '', email: '', department: '', nik: '', phone_number: '' });
         setEditingEmployeeNik(null);
+        toast.success('Employee updated successfully!');
       } catch (error) {
-        console.error('Error editing employee data:', error);
+        toast.error('Error updating employee data!');
       }
     }
   };
 
   return (
     <div className="container mx-auto p-4 relative">
-      < div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold">Employee Log</h2>
         <button
           onClick={() => {
             setShowForm(true);
             setFormData({ name: '', email: '', department: '', nik: '', phone_number: '' });
           }}
-          className="bg-blue-900 text-white px-4 py-2 rounded mb-4 hover:bg-blue-700 transition-all"
+          className="bg-red-600 text-white px-4 py-2 rounded mb-4 hover:bg-blue-700 transition-all"
         >
           Add Employee
         </button>
@@ -223,7 +251,7 @@ const EmployeeLog: React.FC = () => {
                   name="department"
                   value={formData.department}
                   onChange={handleInputChange}
-                  className=" w-full px-3 py-2 border rounded"
+                  className="w-full px-3 py-2 border rounded"
                   required
                 />
               </div>
@@ -247,47 +275,41 @@ const EmployeeLog: React.FC = () => {
         </div>
       )}
 
-      <div className="overflow-x-auto shadow-md rounded-lg border border-gray-100 w-full mt-10">
+      <div className="overflow-x-auto shadow-md rounded-lg border border-gray-100 w-full mt-4">
         <table className="w-full text-sm text-gray-700">
-          <thead className="bg-gray-200 text-base text-gray-800 border-gray-200">
+          <thead className="bg-blue-950 text-white text-base border-gray-200">
             <tr>
-              <th className="py-3 px-6 text-center border-b border-b-gray-300 bg-gray-300 z-10">NIK</th>
-              <th className="py-3 px-6 text-center border-b border-b-gray-300 bg-gray-300 z-10">NAMA</th>
-              <th className="py-3 px-6 text-center border-b border-b-gray-300 bg-gray-300 z-10">DEPARTMENT</th>
-              <th className="py-3 px-6 text-center border-b border-b-gray-300 bg-gray-300 z-10">EMAIL</th>
-              <th className="py-3 px-6 text-center border-b border-b-gray-300 bg-gray-300 z-10">PHONE NUMBER</th>
-              <th className="py-3 px-6 text-center border-b border-b-gray-300 bg-gray-300 z-10">ACTIONS</th>
+              <th className="px-4 py-2 text-left">NIK</th>
+              <th className="px-4 py-2 text-left">Name</th>
+              <th className="px-4 py-2 text-left">Email</th>
+              <th className="px-4 py-2 text-left">Phone Number</th>
+              <th className="px-4 py-2 text-left">Department</th>
+              <th className="px-4 py-2 text-left">Actions</th>
             </tr>
           </thead>
           <tbody>
             {employees.map((employee) => (
-              <tr key={employee.nik} className="odd:bg-white even:bg-gray-50 border-b">
-                <td className="px-6 py-3 text-center">{employee.nik}</td>
-                <td className="px-6 py-3 text-center">{employee.name}</td>
-                <td className="px-6 py-3 text-center">{employee.department}</td>
-                <td className="px-6 py-3 text-center">{employee.email}</td>
-                <td className="px-6 py-3 text-center">{employee.phone_number}</td>
-                <td className="px-6 py-3 text-center">
-                  <div className="flex justify-center space-x-6"> {/* Jarak lebar antara tombol */}
-                    <button 
-                      onClick={() => handleEdit(employee)} 
-                      className="text-blue-700 hover:text-blue-500"
-                    >
-                      <FaPencilAlt size={20} />
-                    </button>
-                    <button 
-                      onClick={() => handleDelete(employee.nik)} 
-                      className="text-blue-800 hover:text-blue-700"
-                    >
-                      <FaTrash size={20} />
-                    </button>
-                  </div>
+              <tr key={employee.nik} className="bg-white hover:bg-gray-100">
+                <td className="px-4 py-2">{employee.nik}</td>
+                <td className="px-4 py-2">{employee.name}</td>
+                <td className="px-4 py-2">{employee.email}</td>
+                <td className="px-4 py-2">{employee.phone_number}</td>
+                <td className="px-4 py-2">{employee.department}</td>
+                <td className="px-4 py-2 flex justify-around">
+                  <button onClick={() => handleEdit(employee)} className="text-blue-600 hover:text-blue-800">
+                    <FaPencilAlt />
+                  </button>
+                  <button onClick={() => handleDeleteConfirmation(employee.nik)} className="text-red-600 hover:text-red-800">
+                    <FaTrash />
+                  </button>
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
+
+      <ToastContainer />
     </div>
   );
 };

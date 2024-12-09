@@ -83,7 +83,7 @@ const CheckOutPage: React.FC = () => {
 
   return (
     <div className="container mx-auto p-4">
-      <h2 className="text-2xl font-bold text-center mb-6">Visitor Check-out</h2>
+      <h2 className="text-2xl font-bold text-center mt-5 mb-4">Visitor Check-out</h2>
 
       {showFilterButton && (
         <div className="mb-6">
@@ -99,10 +99,9 @@ const CheckOutPage: React.FC = () => {
           </select>
         </div>
       )}
-
-      <div className="relative overflow-x-auto shadow-md rounded-lg border border-gray-200">
-        <table className="w-full text-sm text-gray-900">
-          <thead className="bg-gray-300 text-base text-gray-900">
+        <div className="relative overflow-x-auto shadow-md rounded-lg border border-gray-200 w-full mt-6">
+        <table className="w-full text-sm text-gray-700">
+        <thead className="bg-blue-950 text-base text-white border-white-900">
             <tr>
               {/* <th className="py-3 text-center border-b border-b-gray-400 w-24">Foto</th> */}
               <th className="py-3 text-center border-b border-b-gray-400 w-30">NO VISITOR</th>
