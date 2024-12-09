@@ -62,38 +62,27 @@ const EmployeeLog: React.FC = () => {
   };
 
   const handleDeleteConfirmation = (employeeNik: string) => {
-    toast.promise(
-      new Promise((resolve, reject) => {
-        const isConfirmed = window.confirm('Apakah anda yakin ingin menghapus?');
-        if (isConfirmed) {
-          resolve();
-        } else {
-          reject('Deletion canceled');
-        }
-      })
-        .then(() => handleDelete(employeeNik))
-        .catch(() => {
-          // Toast for canceled deletion
-          toast.error('Deletion canceled');
-        }),
-      {
+    const isConfirmed = window.confirm('Apakah anda yakin ingin menghapus?');
+    if (isConfirmed) {
+      toast.promise(handleDelete(employeeNik), {
         pending: 'Processing deletion...',
         success: 'Employee deleted successfully!',
         error: 'Error deleting employee!',
-      }
-    );
+      });
+    } else {
+      toast.info('Deletion canceled');
+    }
   };
   
   const handleDelete = async (employeeNik: string) => {
     try {
-      await deleteEmployeeData(employeeNik); // Ensure this API call resolves correctly
-      setEmployees(employees.filter((employee) => employee.nik !== employeeNik)); // Update employee list
+      await deleteEmployeeData(employeeNik);
+      setEmployees(employees.filter((employee) => employee.nik !== employeeNik));
     } catch (error) {
       console.error('Error deleting employee:', error);
-      toast.error('Error deleting employee!');
+      throw error; // Re-throw the error so toast.promise can catch it
     }
   };
-  
 
   const handleEdit = (employee: Employee) => {
     setEditForm(true);
