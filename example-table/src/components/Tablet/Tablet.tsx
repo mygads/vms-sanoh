@@ -9,7 +9,7 @@ const Tablet: React.FC = () => {
       
       {/* Welcome Text */}
 
-      <div className="flex flex-col items-center space-y-4">
+      <div className="flex flex-col items-center space-y-6">
         <Link to="/tablet/checkin">
           <button className="flex items-center justify-center w-64 px-6 py-3 bg-purple-700 text-white rounded-md hover:bg-purple-600 focus:outline-none">
             <svg

@@ -98,7 +98,7 @@ const VisitorLog: React.FC = () => {
   return (
     <div className="container mx-auto p-4">
       {/* Header with date range filter */}
-      <div className="flex justify-between items-center mt-3 mb-4">
+      <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Visitor Log</h2>
         <div className="flex items-center space-x-2">
           <input
@@ -119,37 +119,37 @@ const VisitorLog: React.FC = () => {
 
       <div className="relative overflow-x-auto shadow-md rounded-lg border border-gray-300">
         <table className="w-full text-sm text-gray-700">
-        <thead className="bg-blue-950 text-base text-white">
-      <tr>
-        <th className="py-3 px-4 text-center border-b border w-40">
-          NO VISITOR
-        </th>
-        <th className="py-3 px-4 text-center border-b">
-          NAMA
-        </th>
-        <th className="py-3 px-4 text-center border-b">
-          PERUSAHAAN
-        </th>
-        <th className="py-3 px-4 text-center border-b">
-          HOST
-        </th>
-        <th className="py-3 px-4 text-center border-b">
-          KEPERLUAN
-        </th>
-        <th className="py-3 px-4 text-center border-b">
-          JUMLAH TAMU
-        </th>
-        <th className="py-3 px-4 text-center border-b">
-          NOMOR KENDARAAN
-        </th>
-        <th className="py-3 px-4 text-center border-b w-40">
-          CHECK IN
-        </th>
-        <th className="py-3 px-4 text-center border-b w-40">
-          CHECK OUT
-        </th>
-      </tr>
-    </thead>
+          <thead className="bg-gray-100 text-base text-gray-700">
+            <tr>
+              <th className="py-3 px-4 text-center border-b border-b-gray-400 w-40">
+                NO VISITOR
+              </th>
+              <th className="py-3 px-4 text-center border-b border-b-gray-400">
+                NAMA
+              </th>
+              <th className="py-3 px-4 text-center border-b border-b-gray-400">
+                PERUSAHAAN
+              </th>
+              <th className="py-3 px-4 text-center border-b border-b-gray-400">
+                HOST
+              </th>
+              <th className="py-3 px-4 text-center border-b border-b-gray-400">
+                KEPERLUAN
+              </th>
+              <th className="py-3 px-4 text-center border-b border-b-gray-400">
+                JUMLAH TAMU
+              </th>
+              <th className="py-3 px-4 text-center border-b border-b-gray-400">
+                NOMOR KENDARAAN
+              </th>
+              <th className="py-3 px-4 text-center border-b border-b-gray-400 w-40">
+                CHECK IN
+              </th>
+              <th className="py-3 px-4 text-center border-b border-b-gray-400 w-40">
+                CHECK OUT
+              </th>
+            </tr>
+          </thead>
           <tbody>
             {currentVisitors.length > 0 ? (
               currentVisitors.map((visitor) => (

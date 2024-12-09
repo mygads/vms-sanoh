@@ -119,7 +119,7 @@ const VisitorLog: React.FC = () => {
 
       <div className="relative overflow-x-auto shadow-md rounded-lg border border-gray-300">
         <table className="w-full text-sm text-gray-700">
-        <thead className="bg-blue-950 text-base text-white">
+          <thead className="bg-gray-300 text-base text-gray-700">
             <tr>
               <th className="py-3 px-4 text-center border-b border-b-gray-400 w-40">
                 NO VISITOR

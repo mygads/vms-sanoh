@@ -25,24 +25,19 @@ const DefaultLayout: React.FC = () => {
         {/* Sidebar content goes here, if needed */}
       </div>
 
-      <div className="relative flex-1 flex flex-col overflow-y-auto overflow-x-hidden mt-3">
-        <header className="bg-white-950 text-white py-2 px-4 flex justify-between items-center h-16">
+      <div className="relative flex-1 flex flex-col overflow-y-auto overflow-x-hidden">
+        <header className="bg-gray-300 text-white py-2 px-4 flex justify-between items-center h-16">
           <div className="flex items-center h-full">
-          <button onClick={() => navigate(isSecurity ? '/security' : '/admin')}>
-            <img 
-              src={logoSanoh} 
-              alt="Sanoh Logo" 
-              className="h-12 w-auto object-contain" 
-              style={{ backgroundColor: 'white', padding: '3px', borderRadius: '1px' }} 
-            />
-          </button>
+            <button onClick={() => navigate(isSecurity ? '/security' : '/admin')}>
+              <img src={logoSanoh} alt="Sanoh Logo" className="h-10 w-auto object-contain" />
+            </button>
           </div>
           <nav className="space-x-7 flex pr-10">
-            <Link to={isSecurity ? "/security/visitor-log" : "/admin/visitor-log"} className="text-blue-900 hover:underline">
+            <Link to={isSecurity ? "/security/visitor-log" : "/admin/visitor-log"} className="text-gray-900 hover:underline">
               Visitor Log
             </Link>
             {!isSecurity && (
-              <Link to="/admin/employees" className="text-blue-900 hover:underline">
+              <Link to="/admin/employees" className="text-gray-900 hover:underline">
                 Employee
               </Link>
             )}
