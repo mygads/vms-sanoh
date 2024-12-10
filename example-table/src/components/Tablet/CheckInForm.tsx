@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { submitVisitorData, fetchEmployeeData, Employee } from '../../services/apiService';
 
 interface VisitorData {
-  visitor_id? : string;
+  visitor_id?: string;
   visitor_date: string;
   visitor_name: string;
   visitor_from: string;
@@ -108,8 +108,8 @@ const CheckInForm: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-center p-8 bg-gray-100 min-h-screen">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-lg">
+    <div className="flex justify-center items-center p-8 bg-gray-100 min-h-screen">
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-xl">
         <form onSubmit={handleSubmit} className="space-y-4">
           <label className="block">
             <span className="text-gray-700">Tanggal:</span>
@@ -117,14 +117,12 @@ const CheckInForm: React.FC = () => {
               type="date"
               name="visitor_date"
               min={today}
-              value={formData.visitor_date} // Set value to formData.visitor_date
+              value={formData.visitor_date}
               onChange={handleChange}
               required
               className="mt-1 block w-full p-2 border border-gray-300 rounded-md"
             />
           </label>
-
-          {/* Rest of your form fields */}
 
           <label className="block">
             <span className="text-gray-700">Nama:</span>
@@ -218,7 +216,7 @@ const CheckInForm: React.FC = () => {
 
           <button
             type="submit"
-            className="w-full bg-purple-600 text-white p-3 rounded-md hover:bg-purple-700"
+            className="w-full bg-pink-700 text-white p-3 rounded-md hover:bg-pink-500"
           >
             Submit
           </button>

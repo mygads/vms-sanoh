@@ -38,10 +38,10 @@ const Admin: React.FC = () => {
         console.error('Error fetching visitor data:', error);
       }
     };
-    
+
     fetchVisitorDataToday();
     const dataInterval = setInterval(fetchVisitorDataToday, 5000);
-    return
+
     return () => clearInterval(dataInterval);
   }, []);
 
@@ -77,7 +77,6 @@ const Admin: React.FC = () => {
     setCurrentPage(newPage);
   };
 
-
   const getRowColorClass = (needs: string) => {
     switch (needs) {
       case 'Meeting':
@@ -94,39 +93,86 @@ const Admin: React.FC = () => {
   return (
     <div className="flex flex-col space-y-6 font-satoshi">
       {/* Cards Row */}
-      <div className="flex justify-between w-full space-x-4">
+      <div className="flex justify-between w-full space-x-6">
         {/* Visitor Active Card */}
-        <div className="bg-white shadow-lg rounded-lg p-4 flex-1 text-center">
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 mx-auto mb-2 text-blue-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 14l4-4m0 0l-4-4m4 4H8" />
+        <div className="bg-gradient-to-b from-gray-400 to-white shadow-lg rounded-lg p-6 flex-1 text-center flex items-center justify-center space-x-6 h-40">
+          <svg
+            className="w-10 h-10 text-blue-900"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeWidth={2}
+              d="M4.5 17H4a1 1 0 0 1-1-1 3 3 0 0 1 3-3h1m0-3.05A2.5 2.5 0 1 1 9 5.5M19.5 17h.5a1 1 0 0 0 1-1 3 3 0 0 0-3-3h-1m0-3.05a2.5 2.5 0 1 0-2-4.45m.5 13.5h-7a1 1 0 0 1-1-1 3 3 0 0 1 3-3h3a3 3 0 0 1 3 3 1 1 0 0 1-1 1Zm-1-9.5a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0Z"
+            />
           </svg>
-          <h2 className="text-2xl font-semibold">Visitor Aktif</h2>
-          <p className="text-4xl mt-2 text-blue-800 font-bold">{visitorCount}</p>
+          <div className="text-left">
+            <h2 className="text-2xl font-semibold text-blue-950">Visitor Aktif</h2>
+            <p className="text-4xl mt-2 font-bold text-blue-950">{visitorCount}</p>
+          </div>
         </div>
 
         {/* Date Card */}
-        <div className="bg-white shadow-lg rounded-lg p-4 flex-1 text-center">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-10 h-10 mx-auto mb-2 text-blue-800">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 3H5c-1.104 0-2 .896-2  2v14c0 1.104.896 2 2 2h14c1.104 0 2-.896 2-2V5c0-1.104-.896-2-2-2zM7 3v4M17 3v4" />
+        <div className="bg-gradient-to-b from-gray-400 to-white shadow-lg rounded-lg p-6 flex-1 text-center flex items-center justify-center space-x-6">
+          <svg
+            className="w-10 h-10 text-blue-900"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
+            />
           </svg>
-          <h2 className="text-2xl font-semibold">Tanggal hari ini</h2>
-          <p className="text-xl mt-2 text-gray-600">{currentDate}</p>
+          <div>
+            <h2 className="text-2xl font-semibold text-blue-950">Tanggal hari ini</h2>
+            <p className="text-xl mt-2 font-bold text-gray-700">{currentDate}</p>
+          </div>
         </div>
 
         {/* Time Card */}
-        <div className="bg-white shadow-lg rounded-lg p-4 flex-1 text-center">
-          <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 mx-auto mb-2 text-blue-800" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6l3 3M16.5 4h-9A2.5 2.5 0 005 6.5v11A2.5 2.5 0 007.5 20h9A2.5 2.5 0 0019 17.5V6.5A2.5 2.5 0 0016.5 4z" />
+        <div className="bg-gradient-to-b from-gray-400 to-white shadow-lg rounded-lg p-6 flex-1 text-center flex items-center justify-center space-x-6">
+          <svg
+            className="w-10 h-10 text-blue-900"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            fill="none"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+            />
           </svg>
-          <h2 className="text-2xl font-semibold">Jam</h2>
-          <p className="text-4xl mt-2 text-blue-800 font-bold">{currentTime}</p>
+          <div>
+            <h2 className="text-2xl font-semibold text-blue-950">Jam</h2>
+            <p className="text-4xl mt-2 font-bold text-blue-950">{currentTime}</p>
+          </div>
         </div>
       </div>
 
       {/* Visitor Table */}
       <div className="relative overflow-x-auto shadow-md rounded-lg border border-gray-200 w-full mt-10">
         <table className="w-full text-sm text-gray-700">
-          <thead className="bg-gray-300 text-base text-gray-800 border-gray-200">
+          <thead className="bg-blue-950 text-base text-white border-white-900">
             <tr>
               <th className="py-3 px-2 text-center border-b border-gray-400 w-40">NO VISITOR</th>
               <th className="py-3 px-2 text-center border-b border-gray-400">NAMA TAMU</th>
@@ -143,20 +189,41 @@ const Admin: React.FC = () => {
               currentVisitors
                 .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
                 .map((visitor) => (
-                  <tr key={visitor.visitor_id} className={`${getRowColorClass(visitor.visitor_needs)} border-b`}>
-                    <td className="px-2 py-3 text-center text-sm text-gray-600">{visitor.visitor_id}</td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_name}</td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_from}</td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_host}</td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_needs}</td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_amount}</td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_vehicle}</td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_checkin}</td>
+                  <tr
+                    key={visitor.visitor_id}
+                    className={`${getRowColorClass(visitor.visitor_needs)} border-b`}
+                  >
+                    <td className="px-2 py-3 text-center text-sm text-gray-600">
+                      {visitor.visitor_id}
+                    </td>
+                    <td className="px-2 py-3 text-center text-sm text-gray-700">
+                      {visitor.visitor_name}
+                    </td>
+                    <td className="px-2 py-3 text-center text-sm text-gray-700">
+                      {visitor.visitor_from}
+                    </td>
+                    <td className="px-2 py-3 text-center text-sm text-gray-700">
+                      {visitor.visitor_host}
+                    </td>
+                    <td className="px-2 py-3 text-center text-sm text-gray-700">
+                      {visitor.visitor_needs}
+                    </td>
+                    <td className="px-2 py-3 text-center text-sm text-gray-700">
+                      {visitor.visitor_amount}
+                    </td>
+                    <td className="px-2 py-3 text-center text-sm text-gray-700">
+                      {visitor.visitor_vehicle}
+                    </td>
+                    <td className="px-2 py-3 text-center text-sm text-gray-700">
+                      {visitor.visitor_checkin}
+                    </td>
                   </tr>
                 ))
             ) : (
               <tr>
-                <td colSpan={8} className="text-center py-3 text-sm text-gray-600">No visitors today.</td>
+                <td colSpan={8} className="py-3 text-center text-gray-600">
+                  No visitors today.
+                </td>
               </tr>
             )}
           </tbody>
@@ -164,38 +231,25 @@ const Admin: React.FC = () => {
       </div>
 
       {/* Pagination */}
-      {currentVisitors.length > itemsPerPage && (
-        <div className="flex justify-center items-center space-x-2 mt-4">
-          <button
-            className={`px-3 py-1 rounded ${
-              currentPage === 1
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-blue-500 text-white'
-            }`}
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            &lt;
-          </button>
-          <span className="px-3">
-            {currentPage} of {totalPages}
-          </span>
+      <div className="mt-4 flex justify-center">
         <button
-            className={`px-3 py-1 rounded ${
-              currentPage === totalPages
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-blue-500 text-white'
-            }`}
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            &gt;
-          </button>
-        </div>
-      )}
-
-          </div>
-        );
-      };
+          onClick={() => handlePageChange(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="bg-blue-950 text-white px-4 py-2 rounded-md disabled:opacity-50"
+        >
+          Previous
+        </button>
+        <span className="mx-4 text-lg">{`Page ${currentPage} of ${totalPages}`}</span>
+        <button
+          onClick={() => handlePageChange(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="bg-blue-950 text-white px-4 py-2 rounded-md disabled:opacity-50"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+};
 
 export default Admin;
