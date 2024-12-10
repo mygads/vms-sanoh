@@ -1,15 +1,102 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getVisitorPrintData, Visitor } from '../../services/apiService';
+import { Document, Page, Text, View, Image, StyleSheet, pdf } from '@react-pdf/renderer';
 import QRCode from 'qrcode';
-// import logoSanoh from '/logo-sanoh.png'; // Adjust the path as needed
+import logoSanoh from '/logo-sanoh.png'; // Adjust the path as needed
+
+const styles = StyleSheet.create({
+  page: {
+    width: '3.15in',
+    height: '6.30in',
+    padding: 3,
+    backgroundColor: '#FFFFFF',
+    marginRight: '12mm',
+    // border: '2px solid #D1D5DB',
+  },
+  logo: {
+    width: 72, // Approximate 'w-24' size
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
+  qrCode: {
+    alignSelf: 'center',
+    marginBottom: 5,
+  },
+  visitorId: {
+    textAlign: 'center',
+    color: '#1F2937',
+    fontSize: 20,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+  infoContainer: {
+    marginBottom: 5,
+  },
+  infoRow: {
+    flexDirection: 'row',
+    marginBottom: 4,
+  },
+  boldText: {
+    fontWeight: 'bold',
+  },
+  label: {
+    fontSize: 10,
+    color: '#374151',
+    fontWeight: 'bold',
+    width: '40%',
+  },
+  value: {
+    fontSize: 10,
+    color: '#374151',
+    width: '60%',
+  },
+  signatureSection: {
+    marginTop: 10,
+  },
+  signatureTitle: {
+    fontSize: 10,
+    fontWeight: 'bold',
+    textAlign: 'center',
+    color: '#374151',
+    marginBottom: 5,
+  },
+  signatureContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  signatureBox: {
+    width: '30%',
+    alignItems: 'center',
+  },
+  signatureLabel: {
+    alignItems: 'center',
+    fontSize: 8,
+    color: '#6B7280',
+    marginBottom: 40,
+  },
+  signatureLine: {
+    borderTopWidth: 1,
+    borderTopColor: '#4B5563',
+    width: '100%',
+    marginTop: 'auto',
+  },
+  notice: {
+    textAlign: 'center',
+    fontSize: 8,
+    color: '#374151',
+    marginTop: 10,
+  },
+  italicText: {
+    fontStyle: 'italic',
+  },
+});
 
 const PrintReceipt: React.FC = () => {
   const { visitorId } = useParams<{ visitorId: string }>();
   const navigate = useNavigate();
   const [visitorData, setVisitorData] = useState<Visitor | null>(null);
   const [qrCodeDataUrl, setQrCodeDataUrl] = useState<string>('');
-  const [logoDataUrl, setLogoDataUrl] = useState<string>('');
   const [isPrinting, setIsPrinting] = useState<boolean>(false);
 
   useEffect(() => {
@@ -22,17 +109,8 @@ const PrintReceipt: React.FC = () => {
           // Generate QR code data URL
           const qrCodeUrl = await QRCode.toDataURL(visitorId, { margin: 0 });
           setQrCodeDataUrl(qrCodeUrl);
-
-          // Load logo image and convert to Data URL
-          const response = await fetch('/logo-sanoh.png'); // Adjust the path if needed
-          const blob = await response.blob();
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            setLogoDataUrl(reader.result as string);
-          };
-          reader.readAsDataURL(blob);
         } catch (error) {
-          console.error('Error fetching visitor data or loading images:', error);
+          console.error('Error fetching visitor data:', error);
         }
       }
     };
@@ -41,153 +119,124 @@ const PrintReceipt: React.FC = () => {
   }, [visitorId]);
 
   useEffect(() => {
-    const printWithQZTray = async () => {
-      if (visitorData && qrCodeDataUrl && logoDataUrl && !isPrinting) {
+    const printDocument = async () => {
+      if (visitorData && qrCodeDataUrl && !isPrinting) {
         setIsPrinting(true);
+        const blob = await pdf(<MyDocument />).toBlob();
+        const url = URL.createObjectURL(blob);
 
-        // Initialize QZ Tray
-        const qz = (window as any).qz;
+        const iframe = document.createElement('iframe');
+        iframe.style.display = 'none';
+        iframe.src = url;
+        document.body.appendChild(iframe);
 
-        if (!qz) {
-          alert('QZ Tray is not loaded. Please ensure qz-tray.js is included.');
-          setIsPrinting(false);
-          return;
-        }
-
-        // Set the proper Promise type
-        qz.api.setPromiseType((resolver: (value?: unknown) => void) => new Promise(resolver));
-
-        // Setup security promises
-        qz.security.setCertificatePromise((resolve: (value?: unknown) => void) => {
-          resolve();
-        });
-
-        qz.security.setSignaturePromise(() => {
-          return (resolve: (value?: unknown) => void) => {
-            resolve();
-          };
-        });
-
-        try {
-          // Connect to QZ Tray
-          await qz.websocket.connect();
-
-          // Get the default printer
-          const printer = await qz.printers.getDefault();
-          console.log('Default printer:', printer);
-
-          // Create printer config
-          const config = qz.configs.create(printer, {
-            encoding: 'UTF-8',
-            copies: 1,
-            density: 1,
-            margins: { top: 0, right: 0, bottom: 0, left: 0 },
-            paperSize: { width: '3.15in', height: '6.30in' },
-          });
-
-          // Generate receipt HTML
-          const receiptHtml = renderReceiptHtml(visitorData, qrCodeDataUrl, logoDataUrl);
-
-          // Prepare print data
-          const data = [
-            {
-              type: 'html',
-              format: 'plain',
-              data: receiptHtml,
-            },
-          ];
-
-          // Print
-          await qz.print(config, data);
-          console.log('Print job submitted successfully');
-
-        } catch (err) {
-          console.error('QZ Tray error:', err);
-          alert(`Printing error: ${err}`);
-        } finally {
-          // Cleanup
-          if (qz.websocket.isActive()) {
-            await qz.websocket.disconnect();
-          }
-          setIsPrinting(false);
-          navigate('/tablet');
-        }
+        iframe.onload = () => {
+          iframe.contentWindow?.print();
+          setTimeout(() => {
+            document.body.removeChild(iframe);
+            setIsPrinting(false);
+            navigate('/tablet'); // Redirect to /tablet after printing
+          }, 5000);
+        };
       }
     };
 
-    printWithQZTray();
-  }, [visitorData, qrCodeDataUrl, logoDataUrl, isPrinting, navigate]);
+    printDocument();
+  }, [visitorData, qrCodeDataUrl, isPrinting, navigate]);
 
-  const renderReceiptHtml = (
-    visitorData: Visitor,
-    qrCodeDataUrl: string,
-    logoDataUrl: string
-  ) => {
-    return `
-      <div style="width: 3.15in; height: 6.30in; padding: 3px; background-color: #FFFFFF;">
-        <img src="${logoDataUrl}" style="width: 72px; display: block; margin: 0 auto 10px;" />
-        <img src="${qrCodeDataUrl}" style="width: 60px; height: 60px; display: block; margin: 0 auto 5px;" />
-        <div style="text-align: center; color: #1F2937; font-size: 20px; font-weight: bold; margin-bottom: 5px;">
-          ${visitorData.visitor_id}
-        </div>
-        <div style="margin-bottom: 5px;">
-          <div style="display: flex; margin-bottom: 4px;">
-            <div style="font-size: 10px; color: #374151; font-weight: bold; width: 40%;">Tanggal Masuk</div>
-            <div style="font-size: 10px; color: #374151; width: 60%;">: ${visitorData.visitor_checkin}</div>
-          </div>
-          <div style="display: flex; margin-bottom: 4px;">
-            <div style="font-size: 10px; color: #374151; font-weight: bold; width: 40%;">Nama Tamu</div>
-            <div style="font-size: 10px; color: #374151; width: 60%;">: ${visitorData.visitor_name}</div>
-          </div>
-          <div style="display: flex; margin-bottom: 4px;">
-            <div style="font-size: 10px; color: #374151; font-weight: bold; width: 40%;">Nama Perusahaan</div>
-            <div style="font-size: 10px; color: #374151; width: 60%;">: ${visitorData.visitor_from}</div>
-          </div>
-          <div style="display: flex; margin-bottom: 4px;">
-            <div style="font-size: 10px; color: #374151; font-weight: bold; width: 40%;">Bertemu</div>
-            <div style="font-size: 10px; color: #374151; width: 60%;">: ${visitorData.visitor_host} - ${visitorData.department}</div>
-          </div>
-          <div style="display: flex; margin-bottom: 4px;">
-            <div style="font-size: 10px; color: #374151; font-weight: bold; width: 40%;">Tujuan</div>
-            <div style="font-size: 10px; color: #374151; width: 60%;">: ${visitorData.visitor_needs}</div>
-          </div>
-          <div style="display: flex; margin-bottom: 4px;">
-            <div style="font-size: 10px; color: #374151; font-weight: bold; width: 40%;">Jumlah Tamu</div>
-            <div style="font-size: 10px; color: #374151; width: 60%;">: ${visitorData.visitor_amount}</div>
-          </div>
-          <div style="display: flex; margin-bottom: 4px;">
-            <div style="font-size: 10px; color: #374151; font-weight: bold; width: 40%;">No Kendaraan</div>
-            <div style="font-size: 10px; color: #374151; width: 60%;">: ${visitorData.visitor_vehicle}</div>
-          </div>
-        </div>
-        <div style="margin-top: 10px;">
-          <div style="text-align: center; font-weight: bold; margin-bottom: 5px;">TANDA TANGAN</div>
-          <div style="display: flex; justify-content: space-between;">
-            <div style="width: 30%; text-align: center;">
-              <div style="font-size: 8px; color: #6B7280; margin-bottom: 40px;">Visitor</div>
-              <div style="border-top: 1px solid #4B5563; width: 100%;"></div>
-            </div>
-            <div style="width: 30%; text-align: center;">
-              <div style="font-size: 8px; color: #6B7280; margin-bottom: 40px;">Penerima Tamu</div>
-              <div style="border-top: 1px solid #4B5563; width: 100%;"></div>
-            </div>
-            <div style="width: 30%; text-align: center;">
-              <div style="font-size: 8px; color: #6B7280; margin-bottom: 40px;">Security</div>
-              <div style="border-top: 1px solid #4B5563; width: 100%;"></div>
-            </div>
-          </div>
-        </div>
-        <div style="text-align: center; font-size: 8px; color: #374151; margin-top: 10px;">
-          <div style="font-weight: bold;">Dilarang mengambil gambar atau foto di area perusahaan tanpa izin</div>
-          <div style="font-style: italic;">(Taking pictures or photos in the company area without permission is prohibited)</div>
-        </div>
-        <div style="text-align: center; font-size: 8px; color: #374151; margin-top: 5px;">
-          <div style="font-weight: bold;">NOTE: Form harus kembali ke pos security</div>
-          <div style="font-style: italic;">(Please return this form to security post)</div>
-        </div>
-      </div>
-    `;
-  };
+  if (!visitorData || !qrCodeDataUrl) {
+    return <div>Loading...</div>;
+  }
+
+  const MyDocument = () => (
+    <Document>
+      <Page size={{ width: 216, height: 432 }} style={styles.page}>
+        {/* Logo */}
+        <Image src={logoSanoh} style={styles.logo} />
+
+        {/* QR Code */}
+        <View style={styles.qrCode}>
+          <Image src={qrCodeDataUrl} style={{ width: 60, height: 60 }} />
+        </View>
+
+        {/* Visitor ID */}
+        <Text style={styles.visitorId}>{visitorData!.visitor_id}</Text>
+
+        {/* Visitor Information */}
+        <View style={styles.infoContainer}>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>Tanggal Masuk</Text>
+            <Text style={styles.value}>: {visitorData!.visitor_checkin}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>Nama Tamu</Text>
+            <Text style={styles.value}>: {visitorData!.visitor_name}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>Nama Perusahaan</Text>
+            <Text style={styles.value}>: {visitorData!.visitor_from}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>Bertemu</Text>
+            <Text style={styles.value}>
+              : {visitorData!.visitor_host} - {visitorData!.department}
+            </Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>Tujuan</Text>
+            <Text style={styles.value}>: {visitorData!.visitor_needs}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>Jumlah Tamu</Text>
+            <Text style={styles.value}>: {visitorData!.visitor_amount}</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.label}>No Kendaraan</Text>
+            <Text style={styles.value}>: {visitorData!.visitor_vehicle}</Text>
+          </View>
+        </View>
+
+        {/* Signature Section */}
+        <View style={styles.signatureSection}>
+          <Text style={styles.signatureTitle}>TANDA TANGAN</Text>
+          <View style={styles.signatureContainer}>
+            <View style={styles.signatureBox}>
+              <Text style={styles.signatureLabel}>Visitor</Text>
+              <View style={styles.signatureLine}></View>
+            </View>
+            <View style={styles.signatureBox}>
+              <Text style={styles.signatureLabel}>Penerima Tamu</Text>
+              <View style={styles.signatureLine}></View>
+            </View>
+            <View style={styles.signatureBox}>
+              <Text style={styles.signatureLabel}>Security</Text>
+              <View style={styles.signatureLine}></View>
+            </View>
+          </View>
+        </View>
+
+        {/* Notice */}
+        <Text style={styles.notice}>
+          <Text style={styles.boldText}>
+            Dilarang mengambil gambar atau foto di area perusahaan tanpa izin
+          </Text>
+          {'\n'}
+          <Text style={styles.italicText}>
+            (Taking pictures or photos in the company area without permission is prohibited)
+          </Text>
+        </Text>
+
+        {/* Note */}
+        <Text style={styles.notice}>
+          <Text style={styles.boldText}>NOTE: Form harus kembali ke pos security</Text>
+          {'\n'}
+          <Text style={styles.italicText}>
+            (Please return this form to security post)
+          </Text>
+        </Text>
+      </Page>
+    </Document>
+  );
 
   return null;
 };
