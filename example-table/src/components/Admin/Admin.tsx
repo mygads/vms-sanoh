@@ -38,10 +38,10 @@ const Admin: React.FC = () => {
         console.error('Error fetching visitor data:', error);
       }
     };
-
+    
     fetchVisitorDataToday();
     const dataInterval = setInterval(fetchVisitorDataToday, 5000);
-
+    return
     return () => clearInterval(dataInterval);
   }, []);
 
@@ -77,6 +77,7 @@ const Admin: React.FC = () => {
     setCurrentPage(newPage);
   };
 
+
   const getRowColorClass = (needs: string) => {
     switch (needs) {
       case 'Meeting':
@@ -95,9 +96,9 @@ const Admin: React.FC = () => {
       {/* Cards Row */}
       <div className="flex justify-between w-full space-x-6">
         {/* Visitor Active Card */}
-        <div className="bg-gradient-to-b from-gray-400 to-white shadow-lg rounded-lg p-6 flex-1 text-center flex items-center justify-center space-x-6 h-40">
+        <div className="bg-gradient-to-b from-gray-400 to-white shadow-lg rounded-lg p-8 flex-1 text-center flex items-center justify-center space-x-6">
           <svg
-            className="w-10 h-10 text-blue-900"
+            className="w-9 h-9 text-blue-900"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -119,9 +120,9 @@ const Admin: React.FC = () => {
         </div>
 
         {/* Date Card */}
-        <div className="bg-gradient-to-b from-gray-400 to-white shadow-lg rounded-lg p-6 flex-1 text-center flex items-center justify-center space-x-6">
+        <div className="bg-gradient-to-b from-gray-400 to-white shadow-lg rounded-lg p-8 flex-1 text-center flex items-center justify-center space-x-6">
           <svg
-            className="w-10 h-10 text-blue-900"
+            className="w-9 h-9 text-blue-900"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -144,9 +145,9 @@ const Admin: React.FC = () => {
         </div>
 
         {/* Time Card */}
-        <div className="bg-gradient-to-b from-gray-400 to-white shadow-lg rounded-lg p-6 flex-1 text-center flex items-center justify-center space-x-6">
+        <div className="bg-gradient-to-b from-gray-400 to-white shadow-lg rounded-lg p-8 flex-1 text-center flex items-center justify-center space-x-6">
           <svg
-            className="w-10 h-10 text-blue-900"
+            className="w-8 h-8 text-blue-900"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -172,7 +173,7 @@ const Admin: React.FC = () => {
       {/* Visitor Table */}
       <div className="relative overflow-x-auto shadow-md rounded-lg border border-gray-200 w-full mt-10">
         <table className="w-full text-sm text-gray-700">
-          <thead className="bg-blue-950 text-base text-white border-white-900">
+          <thead className="bg-gray-300 text-base text-gray-800 border-gray-200">
             <tr>
               <th className="py-3 px-2 text-center border-b border-gray-400 w-40">NO VISITOR</th>
               <th className="py-3 px-2 text-center border-b border-gray-400">NAMA TAMU</th>
@@ -189,41 +190,20 @@ const Admin: React.FC = () => {
               currentVisitors
                 .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
                 .map((visitor) => (
-                  <tr
-                    key={visitor.visitor_id}
-                    className={`${getRowColorClass(visitor.visitor_needs)} border-b`}
-                  >
-                    <td className="px-2 py-3 text-center text-sm text-gray-600">
-                      {visitor.visitor_id}
-                    </td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">
-                      {visitor.visitor_name}
-                    </td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">
-                      {visitor.visitor_from}
-                    </td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">
-                      {visitor.visitor_host}
-                    </td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">
-                      {visitor.visitor_needs}
-                    </td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">
-                      {visitor.visitor_amount}
-                    </td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">
-                      {visitor.visitor_vehicle}
-                    </td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">
-                      {visitor.visitor_checkin}
-                    </td>
+                  <tr key={visitor.visitor_id} className={`${getRowColorClass(visitor.visitor_needs)} border-b`}>
+                    <td className="px-2 py-3 text-center text-sm text-gray-600">{visitor.visitor_id}</td>
+                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_name}</td>
+                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_from}</td>
+                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_host}</td>
+                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_needs}</td>
+                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_amount}</td>
+                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_vehicle}</td>
+                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_checkin}</td>
                   </tr>
                 ))
             ) : (
               <tr>
-                <td colSpan={8} className="py-3 text-center text-gray-600">
-                  No visitors today.
-                </td>
+                <td colSpan={8} className="text-center py-3 text-sm text-gray-600">No visitors today.</td>
               </tr>
             )}
           </tbody>
@@ -231,25 +211,38 @@ const Admin: React.FC = () => {
       </div>
 
       {/* Pagination */}
-      <div className="mt-4 flex justify-center">
+      {currentVisitors.length > itemsPerPage && (
+        <div className="flex justify-center items-center space-x-2 mt-4">
+          <button
+            className={`px-3 py-1 rounded ${
+              currentPage === 1
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                : 'bg-blue-500 text-white'
+            }`}
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={currentPage === 1}
+          >
+            &lt;
+          </button>
+          <span className="px-3">
+            {currentPage} of {totalPages}
+          </span>
         <button
-          onClick={() => handlePageChange(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="bg-blue-950 text-white px-4 py-2 rounded-md disabled:opacity-50"
-        >
-          Previous
-        </button>
-        <span className="mx-4 text-lg">{`Page ${currentPage} of ${totalPages}`}</span>
-        <button
-          onClick={() => handlePageChange(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="bg-blue-950 text-white px-4 py-2 rounded-md disabled:opacity-50"
-        >
-          Next
-        </button>
-      </div>
-    </div>
-  );
-};
+            className={`px-3 py-1 rounded ${
+              currentPage === totalPages
+                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                : 'bg-blue-500 text-white'
+            }`}
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={currentPage === totalPages}
+          >
+            &gt;
+          </button>
+        </div>
+      )}
+
+          </div>
+        );
+      };
 
 export default Admin;

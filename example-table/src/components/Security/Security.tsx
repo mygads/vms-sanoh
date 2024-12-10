@@ -100,9 +100,9 @@ const Security: React.FC = () => {
       {/* Cards Row */}
       <div className="flex justify-between w-full space-x-6">
         {/* Visitor Active Card */}
-        <div className="bg-gradient-to-b from-gray-400 to-white shadow-lg rounded-lg p-6 flex-1 text-center flex items-center justify-center space-x-6 h-40">
+        <div className="bg-gradient-to-b from-gray-400 to-white shadow-lg rounded-lg p-8 flex-1 text-center flex items-center justify-center space-x-6">
           <svg
-            className="w-10 h-10 text-blue-900"
+            className="w-9 h-9 text-blue-900"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -124,9 +124,9 @@ const Security: React.FC = () => {
         </div>
 
         {/* Date Card */}
-        <div className="bg-gradient-to-b from-gray-400 to-white shadow-lg rounded-lg p-6 flex-1 text-center flex items-center justify-center space-x-6">
+        <div className="bg-gradient-to-b from-gray-400 to-white shadow-lg rounded-lg p-8 flex-1 text-center flex items-center justify-center space-x-6">
           <svg
-            className="w-10 h-10 text-blue-900"
+            className="w-9 h-9 text-blue-900"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"
@@ -149,9 +149,9 @@ const Security: React.FC = () => {
         </div>
 
         {/* Time Card */}
-        <div className="bg-gradient-to-b from-gray-400 to-white shadow-lg rounded-lg p-6 flex-1 text-center flex items-center justify-center space-x-6">
+        <div className="bg-gradient-to-b from-gray-400 to-white shadow-lg rounded-lg p-8 flex-1 text-center flex items-center justify-center space-x-6">
           <svg
-            className="w-10 h-10 text-blue-900"
+            className="w-8 h-8 text-blue-900"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
             width="24"

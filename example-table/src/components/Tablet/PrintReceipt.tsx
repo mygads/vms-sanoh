@@ -1,9 +1,51 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getVisitorPrintData, Visitor } from '../../services/apiService';
-import { Document, Page, Text, View, Image, StyleSheet, pdf } from '@react-pdf/renderer';
+import { Document, Page, Text, View, Image, StyleSheet, pdf, Font} from '@react-pdf/renderer';
 import QRCode from 'qrcode';
 import logoSanoh from '/logo-sanoh.png'; // Adjust the path as needed
+
+Font.register({
+  family: 'Poppins',
+  fonts: [
+      {
+      src: 'https://raw.githubusercontent.com/google/fonts/main/ofl/poppins/Poppins-Regular.ttf',
+      fontWeight: 'normal',
+      fontStyle: 'normal'
+      },
+      {
+      src: 'https://raw.githubusercontent.com/google/fonts/main/ofl/poppins/Poppins-Italic.ttf',
+      fontWeight: 'normal',
+      fontStyle: 'italic'
+      },
+      {
+      src: 'https://raw.githubusercontent.com/google/fonts/main/ofl/poppins/Poppins-Medium.ttf', 
+      fontWeight: 'medium',
+      fontStyle: 'normal'
+      },        
+      {
+      src: 'https://raw.githubusercontent.com/google/fonts/main/ofl/poppins/Poppins-SemiBold.ttf',
+      fontWeight: 'semibold',
+      fontStyle: 'normal'
+      },
+      {
+      src: 'https://raw.githubusercontent.com/google/fonts/main/ofl/poppins/Poppins-SemiBoldItalic.ttf',
+      fontWeight: 'semibold',
+      fontStyle: 'italic'
+      },
+      {
+      src: 'https://raw.githubusercontent.com/google/fonts/main/ofl/poppins/Poppins-Bold.ttf',
+      fontWeight: 'bold',
+      fontStyle: 'normal'
+      },
+      {
+      src: 'https://raw.githubusercontent.com/google/fonts/main/ofl/poppins/Poppins-BoldItalic.ttf',
+      fontWeight: 'bold',
+      fontStyle: 'italic'
+      },
+  ],
+});
+
 
 const styles = StyleSheet.create({
   page: {
@@ -13,6 +55,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
     marginRight: '12mm',
     // border: '2px solid #D1D5DB',
+    fontFamily: 'Poppins'
   },
   logo: {
     width: 72, // Approximate 'w-24' size
