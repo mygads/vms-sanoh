@@ -26,7 +26,7 @@ const DefaultLayout: React.FC = () => {
       </div>
 
       <div className="relative flex-1 flex flex-col overflow-y-auto overflow-x-hidden">
-        <header className="bg-gray-300 text-white py-2 px-4 flex justify-between items-center h-16">
+        <header className="bg-white text-white py-2 px-4 mt-3 ml-3 flex justify-between items-center h-16">
           <div className="flex items-center h-full">
             <button onClick={() => navigate(isSecurity ? '/security' : '/admin')}>
               <img src={logoSanoh} alt="Sanoh Logo" className="h-10 w-auto object-contain" />
