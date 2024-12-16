@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { allVisitor } from '../../services/apiService';
+import * as XLSX from 'xlsx';
 
 interface Visitor {
   visitor_id: string;
@@ -95,6 +96,47 @@ const VisitorLog: React.FC = () => {
     }
   };
 
+  // Function to format date as dd/mm/yy
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const year = String(date.getFullYear()).slice(-2);
+    return `${day}/${month}/${year}`;
+  };
+
+  // Function to export filtered visitors to Excel with custom column widths
+  const exportToExcel = () => {
+    const worksheet = XLSX.utils.json_to_sheet(filteredVisitors);
+    const workbook = XLSX.utils.book_new();
+
+    // Define column widths
+    const columnWidths = [
+      { wch: 15 },
+      { wch: 20 },
+      { wch: 20 },
+      { wch: 20 },
+      { wch: 20 },
+      { wch: 15 },
+      { wch: 20 },
+      { wch: 20 },
+      { wch: 20 },
+      { wch: 15 },
+      { wch: 15 },
+    ];
+
+    // Apply column widths to the worksheet
+    worksheet['!cols'] = columnWidths;
+
+    // Format the file name with the date range
+    const formattedStartDate = formatDate(selectedStartDate);
+    const formattedEndDate = formatDate(selectedEndDate);
+    const fileName = `VisitorLog_${formattedStartDate} - ${formattedEndDate}.xlsx`;
+
+    XLSX.utils.book_append_sheet(workbook, worksheet, 'Visitors');
+    XLSX.writeFile(workbook, fileName);
+  };
+
   return (
     <div className="container mx-auto p-4">
       {/* Header with date range filter */}
@@ -114,6 +156,12 @@ const VisitorLog: React.FC = () => {
             value={selectedEndDate}
             onChange={(e) => setSelectedEndDate(e.target.value)}
           />
+          <button
+            onClick={exportToExcel}
+            className="px-4 py-2 bg-green-500 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+          >
+            Export to Excel
+          </button>
         </div>
       </div>
 
