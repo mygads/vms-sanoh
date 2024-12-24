@@ -161,6 +161,7 @@ const CheckInForm: React.FC = () => {
               <option value="Meeting">Meeting</option>
               <option value="Delivery">Delivery</option>
               <option value="Contractor">Contractor</option>
+              <option value="Contractor">Sortir</option>
             </select>
           </label>
 

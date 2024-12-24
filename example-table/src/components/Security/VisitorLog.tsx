@@ -90,6 +90,8 @@ const VisitorLog: React.FC = () => {
         return 'bg-green-100';
       case 'Contractor':
         return 'bg-red-100';
+      case 'Sortir':
+        return 'bg-yellow-50';
       default:
         return 'bg-white';
     }

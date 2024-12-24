@@ -90,6 +90,8 @@ const Security: React.FC = () => {
         return 'bg-green-50';
       case 'Contractor':
         return 'bg-red-50';
+      case 'Sortir':
+        return 'bg-yellow-50';
       default:
         return 'bg-white';
     }
@@ -185,8 +187,6 @@ const Security: React.FC = () => {
               <th className="py-3 px-2 text-center border-b border-gray-400">PERUSAHAAN</th>
               <th className="py-3 px-2 text-center border-b border-gray-400">HOST</th>
               <th className="py-3 px-2 text-center border-b border-gray-400">KEPERLUAN</th>
-              <th className="py-3 px-2 text-center border-b border-gray-400">JUMLAH TAMU</th>
-              <th className="py-3 px-2 text-center border-b border-gray-400">NOMOR KENDARAAN</th>
               <th className="py-3 px-2 text-center border-b border-gray-400 w-40">CHECK IN</th>
             </tr>
           </thead>
@@ -201,8 +201,6 @@ const Security: React.FC = () => {
                     <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_from}</td>
                     <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_host}</td>
                     <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_needs}</td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_amount}</td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_vehicle}</td>
                     <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_checkin}</td>
                   </tr>
                 ))
