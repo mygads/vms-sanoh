@@ -176,73 +176,93 @@ const Security: React.FC = () => {
         </div>
       </div>
 
-
-      {/* Visitor Table */}
-      <div className="relative overflow-x-auto shadow-md rounded-lg border border-gray-200 w-full mt-10">
-        <table className="w-full text-sm text-gray-700">
-        <thead className="bg-blue-950 text-base text-white border-white-900">
-            <tr>
-              <th className="py-3 px-2 text-center border-b border-gray-400 w-40">NO VISITOR</th>
-              <th className="py-3 px-2 text-center border-b border-gray-400">NAMA TAMU</th>
-              <th className="py-3 px-2 text-center border-b border-gray-400">PERUSAHAAN</th>
-              <th className="py-3 px-2 text-center border-b border-gray-400">HOST</th>
-              <th className="py-3 px-2 text-center border-b border-gray-400">KEPERLUAN</th>
-              <th className="py-3 px-2 text-center border-b border-gray-400 w-40">CHECK IN</th>
-            </tr>
-          </thead>
-          <tbody className="bg-gray-50">
-            {currentVisitors.length > 0 ? (
-              currentVisitors
-                .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
-                .map((visitor) => (
-                  <tr key={visitor.visitor_id} className={`${getRowColorClass(visitor.visitor_needs)} border-b`}>
-                    <td className="px-2 py-3 text-center text-sm text-gray-600">{visitor.visitor_id}</td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_name}</td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_from}</td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_host}</td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_needs}</td>
-                    <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_checkin}</td>
+      {/* Split layout */}
+      <div className="flex w-full space-x-6 mt-10 min-h-screen items-stretch">
+      {/* Left side: Visitor Table */}
+        <div className="w-1/2">
+          <div className="relative overflow-x-auto shadow-md rounded-lg border border-gray-200 w-full">
+            <table className="w-full text-sm text-gray-700">
+              <thead className="bg-blue-950 text-base text-white border-white-900">
+                <tr>
+                  <th className="py-3 px-2 text-center border-b border-gray-400 w-40">NO VISITOR</th>
+                  <th className="py-3 px-2 text-center border-b border-gray-400">NAMA TAMU</th>
+                  <th className="py-3 px-2 text-center border-b border-gray-400">PERUSAHAAN</th>
+                  <th className="py-3 px-2 text-center border-b border-gray-400">HOST</th>
+                  <th className="py-3 px-2 text-center border-b border-gray-400">KEPERLUAN</th>
+                  <th className="py-3 px-2 text-center border-b border-gray-400 w-40">CHECK IN</th>
+                </tr>
+              </thead>
+              <tbody className="bg-gray-50">
+                {currentVisitors.length > 0 ? (
+                  currentVisitors
+                    .slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage)
+                    .map((visitor) => (
+                      <tr
+                        key={visitor.visitor_id}
+                        className={`${getRowColorClass(visitor.visitor_needs)} border-b`}
+                      >
+                        <td className="px-2 py-3 text-center text-sm text-gray-600">{visitor.visitor_id}</td>
+                        <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_name}</td>
+                        <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_from}</td>
+                        <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_host}</td>
+                        <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_needs}</td>
+                        <td className="px-2 py-3 text-center text-sm text-gray-700">{visitor.visitor_checkin}</td>
+                      </tr>
+                    ))
+                ) : (
+                  <tr>
+                    <td colSpan={8} className="text-center py-3 text-sm text-gray-600">
+                      No visitors today.
+                    </td>
                   </tr>
-                ))
-            ) : (
-              <tr>
-                <td colSpan={8} className="text-center py-3 text-sm text-gray-600">No visitors today.</td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+                )}
+              </tbody>
+            </table>
+          </div>
 
-      {/* Pagination */}
-      {currentVisitors.length > itemsPerPage && (
-        <div className="flex justify-center items-center space-x-2 mt-4">
-          <button
-            className={`px-3 py-1 rounded ${
-              currentPage === 1
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-blue-600 text-white'
-            }`}
-            onClick={() => handlePageChange(currentPage - 1)}
-            disabled={currentPage === 1}
-          >
-            &lt;
-          </button>
-          <span className="px-3">
-            {currentPage} of {totalPages}
-          </span>
-          <button
-            className={`px-3 py-1 rounded ${
-              currentPage === totalPages
-                ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                : 'bg-blue-600 text-white'
-            }`}
-            onClick={() => handlePageChange(currentPage + 1)}
-            disabled={currentPage === totalPages}
-          >
-            &gt;
-          </button>
+          {/* Pagination */}
+          {currentVisitors.length > itemsPerPage && (
+            <div className="flex justify-center items-center space-x-2 mt-4">
+              <button
+                className={`px-3 py-1 rounded ${
+                  currentPage === 1
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : 'bg-blue-600 text-white'
+                }`}
+                onClick={() => handlePageChange(currentPage - 1)}
+                disabled={currentPage === 1}
+              >
+                &lt;
+              </button>
+              <span className="px-3">
+                {currentPage} of {totalPages}
+              </span>
+              <button
+                className={`px-3 py-1 rounded ${
+                  currentPage === totalPages
+                    ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                    : 'bg-blue-600 text-white'
+                }`}
+                onClick={() => handlePageChange(currentPage + 1)}
+                disabled={currentPage === totalPages}
+              >
+                &gt;
+              </button>
+            </div>
+          )}
         </div>
-      )}
+
+        {/* Right side: Video/Photo Placeholder */}
+        <div className="w-1/2 h-full flex items-center justify-center">
+        <video
+          autoPlay
+          loop
+          className="rounded shadow-md h-full w-full object-cover"
+        >
+          <source src="your-video-file.mp4" type="video/mp4" />
+        </video>
+        </div>
+      </div>
     </div>
   );
 };

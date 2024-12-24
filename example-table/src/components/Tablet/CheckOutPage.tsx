@@ -79,6 +79,8 @@ const CheckOutPage: React.FC = () => {
         return 'bg-green-50';
       case 'Contractor':
         return 'bg-red-50';
+      case 'Sortir':
+        return 'bg-yellow-50';
       default:
         return 'bg-white';
     }
@@ -124,6 +126,7 @@ const CheckOutPage: React.FC = () => {
             <option value="Meeting">Meeting</option>
             <option value="Delivery">Delivery</option>
             <option value="Contractor">Contractor</option>
+            <option value="Contractor">Sortir</option>
           </select>
         </div>
       )}
