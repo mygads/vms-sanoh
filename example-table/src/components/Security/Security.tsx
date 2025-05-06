@@ -257,9 +257,11 @@ const Security: React.FC = () => {
         <video
           autoPlay
           loop
+          muted
           className="rounded shadow-md h-full w-full object-cover"
         >
-          <source src="your-video-file.mp4" type="video/mp4" />
+          <source src="safety_video.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
         </video>
         </div>
       </div>
