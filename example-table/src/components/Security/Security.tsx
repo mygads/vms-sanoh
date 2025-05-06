@@ -102,13 +102,11 @@ const Security: React.FC = () => {
       {/* Cards Row */}
       <div className="flex justify-between w-full space-x-6">
         {/* Visitor Active Card */}
-        <div className="bg-gradient-to-b from-gray-400 to-white shadow-lg rounded-lg p-8 flex-1 text-center flex items-center justify-center space-x-6">
+        <div className="bg-red-50 shadow-md rounded-md p-12 flex-1 text-center flex items-center justify-center space-x-8">
           <svg
-            className="w-9 h-9 text-blue-900"
+            className="w-14 h-14 text-red-900"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
             fill="none"
             viewBox="0 0 24 24"
           >
@@ -120,19 +118,17 @@ const Security: React.FC = () => {
             />
           </svg>
           <div className="text-left">
-            <h2 className="text-2xl font-semibold text-blue-950">Visitor Aktif</h2>
-            <p className="text-4xl mt-2 font-bold text-blue-950">{visitorCount}</p>
+            <h2 className="text-2xl font-semibold text-red-900">Visitor Aktif</h2>
+            <p className="text-4xl font-bold text-red-900">{visitorCount}</p>
           </div>
         </div>
 
         {/* Date Card */}
-        <div className="bg-gradient-to-b from-gray-400 to-white shadow-lg rounded-lg p-8 flex-1 text-center flex items-center justify-center space-x-6">
+        <div className="bg-yellow-50 to-white shadow-md rounded-md p-12 flex-1 text-center flex items-center justify-center space-x-8">
           <svg
-            className="w-9 h-9 text-blue-900"
+            className="w-14 h-14 text-yellow-600"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
             fill="none"
             viewBox="0 0 24 24"
           >
@@ -144,20 +140,18 @@ const Security: React.FC = () => {
               d="M4 10h16m-8-3V4M7 7V4m10 3V4M5 20h14a1 1 0 0 0 1-1V7a1 1 0 0 0-1-1H5a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1Zm3-7h.01v.01H8V13Zm4 0h.01v.01H12V13Zm4 0h.01v.01H16V13Zm-8 4h.01v.01H8V17Zm4 0h.01v.01H12V17Zm4 0h.01v.01H16V17Z"
             />
           </svg>
-          <div>
-            <h2 className="text-2xl font-semibold text-blue-950">Tanggal hari ini</h2>
-            <p className="text-xl mt-2 font-bold text-gray-700">{currentDate}</p>
+          <div className="text-left">
+            <h2 className="text-2xl font-semibold text-yellow-600">Tanggal Hari Ini</h2>
+            <p className="text-3xl font-bold text-yellow-600 mt-1">{currentDate}</p>
           </div>
         </div>
 
         {/* Time Card */}
-        <div className="bg-gradient-to-b from-gray-400 to-white shadow-lg rounded-lg p-8 flex-1 text-center flex items-center justify-center space-x-6">
+        <div className="bg-green-50 border-2 border-green-50 shadow-md rounded-md p-12 flex-1 text-center flex items-center justify-center space-x-8">
           <svg
-            className="w-8 h-8 text-blue-900"
+            className="w-14 h-14 text-green-900"
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
             fill="none"
             viewBox="0 0 24 24"
           >
@@ -169,12 +163,12 @@ const Security: React.FC = () => {
               d="M12 8v4l3 3m6-3a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
             />
           </svg>
-          <div>
-            <h2 className="text-2xl font-semibold text-blue-950">Jam</h2>
-            <p className="text-4xl mt-2 font-bold text-blue-950">{currentTime}</p>
+          <div className="text-left">
+            <h2 className="text-2xl font-semibold text-green-900">Jam</h2>
+            <p className="text-4xl font-bold text-green-900 mt-1">{currentTime}</p>
           </div>
         </div>
-      </div>
+        </div>
 
       {/* Split layout */}
       <div className="flex w-full space-x-6 mt-10 min-h-screen items-stretch">
