@@ -19,7 +19,7 @@ interface Visitor {
 const VisitorLog: React.FC = () => {
   const [visitors, setVisitors] = useState<Visitor[]>([]);
   const [filteredVisitors, setFilteredVisitors] = useState<Visitor[]>([]);
-  const [filter] = useState<string>('All');
+  // no more visitor_needs filter, display strictly by check-in order
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [selectedStartDate, setSelectedStartDate] = useState<string>(() => {
     const today = new Date().toISOString().split('T')[0];
@@ -41,14 +41,11 @@ const VisitorLog: React.FC = () => {
           );
         });
 
-        // Sort the filtered visitors by check-in time
-        const sortedByCheckin = filteredByDate.sort((a, b) => {
-          const timeA = new Date(`${a.visitor_date} ${a.visitor_checkin}`).getTime();
-          const timeB = new Date(`${b.visitor_date} ${b.visitor_checkin}`).getTime();
-          return timeA - timeB;
-        });
+        // Sort by check-in time only (HH:mm format)
+        filteredByDate.sort((a, b) => a.visitor_checkin.localeCompare(b.visitor_checkin));
 
-        setVisitors(sortedByCheckin);
+        // Use pure check-in sorted data
+        setVisitors(filteredByDate);
       } else {
         console.warn('No visitor data found');
         setVisitors([]);
@@ -63,13 +60,10 @@ const VisitorLog: React.FC = () => {
   }, [selectedStartDate, selectedEndDate]);
 
   useEffect(() => {
-    const updatedVisitors =
-      filter === 'All'
-        ? visitors
-        : visitors.filter((visitor) => visitor.visitor_needs === filter);
-    setFilteredVisitors(updatedVisitors);
+    // Display all visitors strictly in check-in order
+    setFilteredVisitors(visitors);
     setCurrentPage(1);
-  }, [filter, visitors]);
+  }, [visitors]);
 
   const totalPages = Math.ceil(filteredVisitors.length / itemsPerPage);
   const currentVisitors = filteredVisitors.slice(
