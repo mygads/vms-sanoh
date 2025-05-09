@@ -25,6 +25,7 @@
     "react-switch": "^7.0.0",
     "react-to-print": "^3.0.2",
     "react-toastify": "^10.0.6",
+    "switch": "^0.0.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {
